@@ -75,7 +75,10 @@
         <form action="deleteVehicle.jsp" method="post" onsubmit="return confirm('Are you sure you want to delete this vehicle?');">
           <input type="hidden" name="vehicleId" value="<%= vehicle.getId() %>">
           <button type="submit" class="btn btn-danger">Delete</button>
+          <a href="changeAvailability.jsp?id=<%= vehicle.getId() %>" class="btn btn-warning">Change Availability</a>
+          <a href="editVehicle.jsp?id=<%= vehicle.getId() %>" class="btn btn-info">Edit Details</a>
         </form>
+
       </td>
     </tr>
     <%

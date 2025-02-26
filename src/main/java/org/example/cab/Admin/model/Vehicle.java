@@ -33,6 +33,9 @@ public class Vehicle {
         this.driverId = driverId;
     }
 
+    public Vehicle(int id, String category, String vehicleNumber, String cc, String engineNo, String fuelType, int seatCapacity, double rentalPrice, int driverId, String filePath) {
+    }
+
     // Getters and Setters
     public int getId() {
         return id;

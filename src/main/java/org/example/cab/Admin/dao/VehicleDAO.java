@@ -31,23 +31,40 @@ public class VehicleDAO {
         }
         return false;
     }
-
     // Update an existing vehicle
-    public boolean updateVehicle(Vehicle vehicle) {
-        String sql = "UPDATE vehicle SET category=?, vehicle_number=?, cc=?, engine_no=?, vehicle_photo=?, available=?, fuel_type=?, seat_capacity=?, rental_price=?, driver_id=? WHERE id=?";
+    public static boolean updateVehicle(int id, String category, String vehicleNumber, String cc,
+                                        String engineNo, String fuelType, int seatCapacity,
+                                        double rentalPrice, int driverId, String filePath, boolean available) {
+        String sql = "UPDATE vehicle SET category=?, vehicle_number=?, cc=?, engine_no=?, vehicle_photo=?, "
+                + "available=?, fuel_type=?, seat_capacity=?, rental_price=?, driver_id=? WHERE id=?";
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, vehicle.getCategory());
-            stmt.setString(2, vehicle.getVehicleNumber());
-            stmt.setString(3, vehicle.getCc());
-            stmt.setString(4, vehicle.getEngineNo());
-            stmt.setString(5, vehicle.getVehiclePhoto());
-            stmt.setBoolean(6, vehicle.isAvailable());
-            stmt.setString(7, vehicle.getFuelType());
-            stmt.setInt(8, vehicle.getSeatCapacity());
-            stmt.setDouble(9, vehicle.getRentalPrice());
-            stmt.setInt(10, vehicle.getDriverId());
-            stmt.setInt(11, vehicle.getId());
+            stmt.setString(1, category);
+            stmt.setString(2, vehicleNumber);
+            stmt.setString(3, cc);
+            stmt.setString(4, engineNo);
+            stmt.setString(5, filePath); // Updated to use filePath
+            stmt.setBoolean(6, available);
+            stmt.setString(7, fuelType);
+            stmt.setInt(8, seatCapacity);
+            stmt.setDouble(9, rentalPrice);
+            stmt.setInt(10, driverId);
+            stmt.setInt(11, id);
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+
+    // Update vehicle availability
+    public boolean updateAvailability(int id, boolean available) {
+        String sql = "UPDATE vehicle SET available=? WHERE id=?";
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setBoolean(1, available);
+            stmt.setInt(2, id);
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -117,20 +134,6 @@ public class VehicleDAO {
         return vehicles;
     }
 
-    // Update vehicle availability
-    public boolean updateVehicleAvailability(int id, boolean available) {
-        String sql = "UPDATE vehicle SET available=? WHERE id=?";
-        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setBoolean(1, available);
-            stmt.setInt(2, id);
-            return stmt.executeUpdate() > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
     // Assign/change driver for a vehicle
     public boolean assignDriverToVehicle(int vehicleId, int driverId) {
         String sql = "UPDATE vehicle SET driver_id=? WHERE id=?";
@@ -176,4 +179,36 @@ public class VehicleDAO {
         vehicle.setDriverId(rs.getInt("driver_id"));
         return vehicle;
     }
+
+
+    // Update an existing vehicle
+    public boolean updateVehicle(Vehicle vehicle) {
+        String sql = "UPDATE vehicle SET category=?, vehicle_number=?, cc=?, engine_no=?, vehicle_photo=?, "
+                + "available=?, fuel_type=?, seat_capacity=?, rental_price=?, driver_id=? WHERE id=?";
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, vehicle.getCategory());
+            stmt.setString(2, vehicle.getVehicleNumber());
+            stmt.setString(3, vehicle.getCc());
+            stmt.setString(4, vehicle.getEngineNo());
+            stmt.setString(5, vehicle.getVehiclePhoto());
+            stmt.setBoolean(6, vehicle.isAvailable()); // Ensure this value is set properly
+            stmt.setString(7, vehicle.getFuelType());
+            stmt.setInt(8, vehicle.getSeatCapacity());
+            stmt.setDouble(9, vehicle.getRentalPrice());
+            stmt.setInt(10, vehicle.getDriverId());
+            stmt.setInt(11, vehicle.getId());
+
+            int rowsUpdated = stmt.executeUpdate();
+            return rowsUpdated > 0; // Return true if at least one row is updated
+        } catch (SQLException e) {
+            e.printStackTrace(); // Print stack trace for debugging
+            System.err.println("SQLState: " + e.getSQLState());
+            System.err.println("Error Code: " + e.getErrorCode());
+            System.err.println("Message: " + e.getMessage());
+        }
+        return false;
+    }
+
+
 }

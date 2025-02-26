@@ -42,7 +42,7 @@ public class AddVehicleServlet extends HttpServlet {
         vehicle.setFuelType(fuelType);
         vehicle.setSeatCapacity(seatCapacity);
         vehicle.setRentalPrice(rentalPrice);
-        vehicle.setVehiclePhoto(fileName);
+        vehicle.setVehiclePhoto("uploads/" + fileName);
         vehicle.setDriverId(driverId); // Set the driver ID
 
         VehicleDAO dao = new VehicleDAO();
