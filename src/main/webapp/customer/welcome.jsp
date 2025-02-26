@@ -112,7 +112,7 @@
         <div class="card">
             <h3>Ride History</h3>
             <p>View your previous trips and receipts.</p>
-            <a href="rideHistory.jsp" class="btn">View History</a>
+            <a href="view_cus_vehicle.jsp" class="btn">View vehicles</a>
         </div>
 
         <div class="card">

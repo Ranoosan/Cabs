@@ -93,4 +93,36 @@ public class DriverDAO {
         }
         return false;
     }
+
+    public Driver getDriverByVehicleId(String vehicleIdParam) {
+        Driver driver = null;
+        String query = "SELECT d.* FROM driversss d " +
+                "JOIN vehicle v ON d.id = v.driver_id " + // Adjust based on your schema
+                "WHERE v.id = ?"; // Assuming vehicle ID is used for the vehicle table
+
+        try (Connection connection = DBConnection.getConnection(); // Get a database connection
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+            preparedStatement.setString(1, vehicleIdParam);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                driver = new Driver();
+                driver.setId(resultSet.getInt("id")); // Adjust based on your Driver class attributes
+                driver.setFullName(resultSet.getString("fullname")); // Adjust based on your Driver class attributes
+                driver.setContactNumber(resultSet.getString("contactnumber")); // Adjust based on your Driver class attributes
+                driver.setEmailAddress(resultSet.getString("emailAddress"));
+                driver.setResidentialAddress(resultSet.getString("residentialAddress"));
+                driver.setLicenseNumber(resultSet.getString("licenseNumber"));
+                driver.setLicenseType(resultSet.getString("licenseType"));
+                driver.setExpirationDate(resultSet.getDate("expirationDate").toLocalDate()); // Convert java.sql.Date to java.time.LocalDate if needed
+// Adjust based on your Driver class attributes
+
+                // Set other Driver attributes as needed
+            }
+        } catch (Exception e) {
+            e.printStackTrace(); // Handle exceptions properly in a real application
+        }
+        return driver;
+    }
 }

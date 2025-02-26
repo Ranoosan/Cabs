@@ -15,7 +15,6 @@ public class VehicleDAO {
         String sql = "INSERT INTO vehicle (category, vehicle_number, cc, engine_no, vehicle_photo, available, fuel_type, seat_capacity, rental_price, driver_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-
             stmt.setString(1, vehicle.getCategory());
             stmt.setString(2, vehicle.getVehicleNumber());
             stmt.setString(3, vehicle.getCc());
@@ -25,11 +24,9 @@ public class VehicleDAO {
             stmt.setString(7, vehicle.getFuelType());
             stmt.setInt(8, vehicle.getSeatCapacity());
             stmt.setDouble(9, vehicle.getRentalPrice());
-            stmt.setInt(10, vehicle.getDriverId()); // Set driver ID
-
+            stmt.setInt(10, vehicle.getDriverId());
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
-            System.err.println("Error adding vehicle: " + e.getMessage());
             e.printStackTrace();
         }
         return false;
@@ -40,7 +37,6 @@ public class VehicleDAO {
         String sql = "UPDATE vehicle SET category=?, vehicle_number=?, cc=?, engine_no=?, vehicle_photo=?, available=?, fuel_type=?, seat_capacity=?, rental_price=?, driver_id=? WHERE id=?";
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-
             stmt.setString(1, vehicle.getCategory());
             stmt.setString(2, vehicle.getVehicleNumber());
             stmt.setString(3, vehicle.getCc());
@@ -50,12 +46,10 @@ public class VehicleDAO {
             stmt.setString(7, vehicle.getFuelType());
             stmt.setInt(8, vehicle.getSeatCapacity());
             stmt.setDouble(9, vehicle.getRentalPrice());
-            stmt.setInt(10, vehicle.getDriverId()); // Set driver ID
+            stmt.setInt(10, vehicle.getDriverId());
             stmt.setInt(11, vehicle.getId());
-
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
-            System.err.println("Error updating vehicle: " + e.getMessage());
             e.printStackTrace();
         }
         return false;
@@ -66,11 +60,9 @@ public class VehicleDAO {
         String sql = "DELETE FROM vehicle WHERE id=?";
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-
             stmt.setInt(1, id);
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
-            System.err.println("Error deleting vehicle: " + e.getMessage());
             e.printStackTrace();
         }
         return false;
@@ -79,50 +71,109 @@ public class VehicleDAO {
     // Get all vehicles
     public List<Vehicle> getAllVehicles() {
         List<Vehicle> vehicles = new ArrayList<>();
-        String sql = "SELECT id, category, vehicle_number, cc, engine_no, vehicle_photo, available, fuel_type, seat_capacity, rental_price, driver_id FROM vehicle";
-
+        String sql = "SELECT * FROM vehicle";
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
              PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
-
             while (rs.next()) {
-                Vehicle vehicle = new Vehicle();
-                vehicle.setId(rs.getInt("id"));
-                vehicle.setCategory(rs.getString("category"));
-                vehicle.setVehicleNumber(rs.getString("vehicle_number"));
-                vehicle.setCc(rs.getString("cc"));
-                vehicle.setEngineNo(rs.getString("engine_no"));
-                vehicle.setVehiclePhoto(rs.getString("vehicle_photo"));
-                vehicle.setAvailable(rs.getBoolean("available"));
-                vehicle.setFuelType(rs.getString("fuel_type"));
-                vehicle.setSeatCapacity(rs.getInt("seat_capacity"));
-                vehicle.setRentalPrice(rs.getDouble("rental_price"));
-                vehicle.setDriverId(rs.getInt("driver_id"));
-                vehicles.add(vehicle);
+                vehicles.add(mapResultSetToVehicle(rs));
             }
         } catch (SQLException e) {
-            System.err.println("Error retrieving vehicle list: " + e.getMessage());
             e.printStackTrace();
         }
         return vehicles;
     }
 
-    // Get vehicle photo by ID
-    public String getVehiclePhotoById(int id) {
-        String sql = "SELECT vehicle_photo FROM vehicle WHERE id=?";
+    // Get vehicle by ID
+    public Vehicle getVehicleById(int id) {
+        String sql = "SELECT * FROM vehicle WHERE id=?";
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-
             stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
-
             if (rs.next()) {
-                return rs.getString("vehicle_photo");
+                return mapResultSetToVehicle(rs);
             }
         } catch (SQLException e) {
-            System.err.println("Error retrieving vehicle photo: " + e.getMessage());
             e.printStackTrace();
         }
         return null;
+    }
+
+    // Get vehicles by category
+    public List<Vehicle> getVehiclesByCategory(String category) {
+        List<Vehicle> vehicles = new ArrayList<>();
+        String sql = "SELECT * FROM vehicle WHERE category=?";
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, category);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                vehicles.add(mapResultSetToVehicle(rs));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return vehicles;
+    }
+
+    // Update vehicle availability
+    public boolean updateVehicleAvailability(int id, boolean available) {
+        String sql = "UPDATE vehicle SET available=? WHERE id=?";
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setBoolean(1, available);
+            stmt.setInt(2, id);
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    // Assign/change driver for a vehicle
+    public boolean assignDriverToVehicle(int vehicleId, int driverId) {
+        String sql = "UPDATE vehicle SET driver_id=? WHERE id=?";
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, driverId);
+            stmt.setInt(2, vehicleId);
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    // Get total vehicle count
+    public int getTotalVehicleCount() {
+        String sql = "SELECT COUNT(*) AS total FROM vehicle";
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt("total");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    // Helper method to map ResultSet to Vehicle object
+    private Vehicle mapResultSetToVehicle(ResultSet rs) throws SQLException {
+        Vehicle vehicle = new Vehicle();
+        vehicle.setId(rs.getInt("id"));
+        vehicle.setCategory(rs.getString("category"));
+        vehicle.setVehicleNumber(rs.getString("vehicle_number"));
+        vehicle.setCc(rs.getString("cc"));
+        vehicle.setEngineNo(rs.getString("engine_no"));
+        vehicle.setVehiclePhoto(rs.getString("vehicle_photo"));
+        vehicle.setAvailable(rs.getBoolean("available"));
+        vehicle.setFuelType(rs.getString("fuel_type"));
+        vehicle.setSeatCapacity(rs.getInt("seat_capacity"));
+        vehicle.setRentalPrice(rs.getDouble("rental_price"));
+        vehicle.setDriverId(rs.getInt("driver_id"));
+        return vehicle;
     }
 }
