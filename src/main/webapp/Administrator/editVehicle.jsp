@@ -2,6 +2,7 @@
 <%@ page import="org.example.cab.Admin.model.Vehicle" %>
 <%@ page import="org.example.cab.Admin.dao.DriverDAO" %>
 <%@ page import="org.example.cab.Admin.model.Driver" %>
+<%@ page import="org.example.cab.Admin.controller.EditVehicleServlet" %>
 <%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 

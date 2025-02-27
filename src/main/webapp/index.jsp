@@ -46,7 +46,7 @@
     <a href="customer/register.jsp">For Customers</a><br>
     <a href="driver/login.jsp">For Drivers </a><br>
     <a href="Administrator/login.jsp">For admin </a><br>
-    <a href="Administrator/mange_vehicle.jsp">For admin vehicle </a><br>
+
 
 </div>
 </body>

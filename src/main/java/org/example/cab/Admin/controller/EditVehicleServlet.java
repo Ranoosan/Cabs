@@ -15,7 +15,7 @@ import jakarta.servlet.http.Part;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
-
+@WebServlet("/Administrator/EditVehicleServlet")
 @MultipartConfig(fileSizeThreshold = 1024 * 1024 * 2,  // 2MB threshold
         maxFileSize = 1024 * 1024 * 10,      // 10MB max file size
         maxRequestSize = 1024 * 1024 * 50)   // 50MB max request size

@@ -31,31 +31,7 @@ public class VehicleDAO {
         }
         return false;
     }
-    // Update an existing vehicle
-    public static boolean updateVehicle(int id, String category, String vehicleNumber, String cc,
-                                        String engineNo, String fuelType, int seatCapacity,
-                                        double rentalPrice, int driverId, String filePath, boolean available) {
-        String sql = "UPDATE vehicle SET category=?, vehicle_number=?, cc=?, engine_no=?, vehicle_photo=?, "
-                + "available=?, fuel_type=?, seat_capacity=?, rental_price=?, driver_id=? WHERE id=?";
-        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, category);
-            stmt.setString(2, vehicleNumber);
-            stmt.setString(3, cc);
-            stmt.setString(4, engineNo);
-            stmt.setString(5, filePath); // Updated to use filePath
-            stmt.setBoolean(6, available);
-            stmt.setString(7, fuelType);
-            stmt.setInt(8, seatCapacity);
-            stmt.setDouble(9, rentalPrice);
-            stmt.setInt(10, driverId);
-            stmt.setInt(11, id);
-            return stmt.executeUpdate() > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
+
 
 
     // Update vehicle availability
