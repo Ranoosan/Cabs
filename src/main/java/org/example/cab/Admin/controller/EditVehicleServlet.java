@@ -31,6 +31,7 @@ public class EditVehicleServlet extends HttpServlet {
             int seatCapacity = Integer.parseInt(request.getParameter("seat_capacity"));
             double rentalPrice = Double.parseDouble(request.getParameter("rental_price"));
             int driverId = Integer.parseInt(request.getParameter("driver_id"));
+            String vehicle_model_name = request.getParameter("vehicle_model_name");
 
             // Handle file upload for vehicle photo
             Part filePart = request.getPart("vehicle_photo");
@@ -50,7 +51,7 @@ public class EditVehicleServlet extends HttpServlet {
             }
 
             // Create vehicle object and update details
-            Vehicle vehicle = new Vehicle(id, category, vehicleNumber, cc, engineNo, fuelType, seatCapacity, rentalPrice, driverId, uploadPath);
+            Vehicle vehicle = new Vehicle(id, category, vehicleNumber, cc, engineNo, fuelType, seatCapacity, rentalPrice, driverId, uploadPath,vehicle_model_name);
             VehicleDAO vehicleDAO = new VehicleDAO();
             boolean success = vehicleDAO.updateVehicle(vehicle);
 
