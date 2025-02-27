@@ -1,16 +1,7 @@
 <%@ page import="org.example.cab.Admin.dao.DriverDAO" %>
-<%@ page import="org.example.cab.Admin.model.Vehicle" %>
 <%@ page import="org.example.cab.Admin.model.Driver" %>
-<%@ page import="org.example.cab.Admin.dao.VehicleDAO" %>
 <%@ page import="java.util.List" %>
-<%@ page import="java.io.*" %>
-<%@ page import="javax.servlet.*" %>
-<%@ page import="javax.servlet.http.*" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="jakarta.servlet.annotation.MultipartConfig" %>
-<%@ page import="jakarta.servlet.annotation.WebServlet" %>
-<%@ page import="jakarta.servlet.http.Part" %>
-
 <html>
 <head>
     <title>Add Vehicle</title>
@@ -55,7 +46,15 @@
     <h2>Add New Vehicle</h2>
     <form action="AddVehicleServlet" method="post" enctype="multipart/form-data">
         <label for="category">Vehicle Category:</label>
-        <input type="text" id="category" name="category" required>
+        <select id="category" name="category" required>
+            <option value="Car">Car</option>
+            <option value="Van">Van</option>
+            <option value="Auto">Auto</option>
+            <option value="Bike">Bike</option>
+        </select>
+
+        <label for="vehicle_model_name">Vehicle Model Name:</label>
+        <input type="text" id="vehicle_model_name" name="vehicle_model_name" required>
 
         <label for="vehicle_number">Vehicle Number:</label>
         <input type="text" id="vehicle_number" name="vehicle_number" required>
@@ -109,44 +108,6 @@
 
         <button type="submit">Add Vehicle</button>
     </form>
-
-    <%
-        // Handle file upload data if the request is POST
-        if ("POST".equalsIgnoreCase(request.getMethod())) {
-            String savePath = application.getRealPath("") + "uploads"; // Path to uploads folder
-            File fileSaveDir = new File(savePath);
-            if (!fileSaveDir.exists()) {
-                fileSaveDir.mkdir(); // Create uploads directory if it does not exist
-            }
-
-            // Get file upload data
-            Part filePart = request.getPart("vehicle_photo"); // Retrieves <input type="file" name="vehicle_photo">
-            String fileName = filePart.getSubmittedFileName(); // Gets the file name
-
-            // Save the file
-            File file = new File(fileSaveDir, fileName);
-            filePart.write(file.getAbsolutePath());
-
-            // Save the vehicle data to the database
-            Vehicle vehicle = new Vehicle();
-            vehicle.setVehiclePhoto("uploads/" + fileName); // Save relative path
-            vehicle.setCategory(request.getParameter("category"));
-            vehicle.setVehicleNumber(request.getParameter("vehicle_number"));
-            vehicle.setCc(request.getParameter("cc"));
-            vehicle.setEngineNo(request.getParameter("engine_no"));
-            vehicle.setAvailable(Boolean.parseBoolean(request.getParameter("available")));
-            vehicle.setFuelType(request.getParameter("fuel_type"));
-            vehicle.setSeatCapacity(Integer.parseInt(request.getParameter("seat_capacity")));
-            vehicle.setRentalPrice(Double.parseDouble(request.getParameter("rental_price")));
-            vehicle.setDriverId(Integer.parseInt(request.getParameter("driver_id"))); // Set driver ID
-
-            VehicleDAO vehicleDAO = new VehicleDAO();
-            vehicleDAO.addVehicle(vehicle); // Implement this method in VehicleDAO
-
-            // Redirect or display success message
-            response.sendRedirect("success.jsp"); // Redirect to a success page
-        }
-    %>
 </div>
 
 </body>

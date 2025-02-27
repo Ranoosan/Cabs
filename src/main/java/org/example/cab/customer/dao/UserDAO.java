@@ -1,6 +1,5 @@
 package org.example.cab.customer.dao;
 
-
 import org.example.cab.customer.model.User;
 
 import java.sql.*;
@@ -19,13 +18,18 @@ public class UserDAO {
     }
 
     public boolean registerUser(User user) {
-        String sql = "INSERT INTO users (username, password, email) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO users (username, password, email, contact_number, address, gender, nic, date_of_birth) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD);
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, user.getUsername());
             stmt.setString(2, user.getPassword()); // Consider hashing passwords
             stmt.setString(3, user.getEmail());
+            stmt.setString(4, user.getContactNumber());
+            stmt.setString(5, user.getAddress());
+            stmt.setString(6, user.getGender());
+            stmt.setString(7, user.getNic());
+            stmt.setDate(8, new java.sql.Date(user.getDateOfBirth().getTime())); // Convert java.util.Date to java.sql.Date
 
             int rowsInserted = stmt.executeUpdate();
             return rowsInserted > 0;
@@ -35,6 +39,7 @@ public class UserDAO {
         }
         return false;
     }
+
     public User validateUser(String username, String password) {
         String sql = "SELECT * FROM users WHERE username = ? AND password = ?";
 
@@ -47,7 +52,9 @@ public class UserDAO {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                return new User(rs.getString("username"), rs.getString("password"), rs.getString("email"));
+                return new User(rs.getString("username"), rs.getString("password"), rs.getString("email"),
+                        rs.getString("contact_number"), rs.getString("address"), rs.getString("gender"),
+                        rs.getString("nic"), rs.getDate("date_of_birth")); // Assuming you want to return the date as well
             }
 
         } catch (SQLException e) {
@@ -55,5 +62,4 @@ public class UserDAO {
         }
         return null;  // Return null if login fails
     }
-
 }

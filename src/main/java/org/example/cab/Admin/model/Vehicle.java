@@ -4,6 +4,7 @@ public class Vehicle {
     private int id;
     private String category;
     private String vehicleNumber;
+    private String vehicle_model_name;
     private String cc;
     private String engineNo;
     private String vehiclePhoto;
@@ -19,7 +20,7 @@ public class Vehicle {
 
     // Parameterized constructor
     public Vehicle(int id, String category, String vehicleNumber, String cc, String engineNo, String vehiclePhoto,
-                   boolean available, String fuelType, int seatCapacity, double rentalPrice, int driverId) {
+                   boolean available, String fuelType, int seatCapacity, double rentalPrice, int driverId , String vehicle_model_name) {
         this.id = id;
         this.category = category;
         this.vehicleNumber = vehicleNumber;
@@ -31,9 +32,10 @@ public class Vehicle {
         this.seatCapacity = seatCapacity;
         this.rentalPrice = rentalPrice;
         this.driverId = driverId;
+        this.vehicle_model_name = vehicle_model_name;
     }
 
-    public Vehicle(int id, String category, String vehicleNumber, String cc, String engineNo, String fuelType, int seatCapacity, double rentalPrice, int driverId, String filePath) {
+    public Vehicle(int id, String category, String vehicleNumber, String cc, String engineNo, String fuelType, int seatCapacity, double rentalPrice, int driverId, String filePath, String vehicle_model_name) {
     }
 
     // Getters and Setters
@@ -124,4 +126,15 @@ public class Vehicle {
     public void setDriverId(int driverId) {
         this.driverId = driverId;
     }
+
+
+    public String getVehicle_model_name() {
+        return vehicle_model_name;
+    }
+
+    public void setVehicle_model_name(String vehicle_model_name) {
+        this.vehicle_model_name = vehicle_model_name;
+    }
+
+
 }

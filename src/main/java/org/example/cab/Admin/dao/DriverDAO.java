@@ -10,6 +10,10 @@ public class DriverDAO {
     // Add new driver
     public boolean addDriver(Driver driver) {
         String sql = "INSERT INTO driversss (username, password, fullname, contactnumber, emailaddress, residentialaddress, licensenumber, licensetype, expirationdate, bankaccountnumber, emergencycontactdetails, medicalcertificate, copyofdrivinglicense, proofofaddress, termsaccepted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String insertVehicleSQL = "INSERT INTO Combined_Vehicle_Driver (vehicle_category, vehicle_number, cc, "
+                + "engine_no, vehicle_photo, available, fuel_type, seat_capacity, rental_price, driver_id) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 

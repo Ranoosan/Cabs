@@ -12,7 +12,7 @@ public class VehicleDAO {
 
     // Add a new vehicle
     public boolean addVehicle(Vehicle vehicle) {
-        String sql = "INSERT INTO vehicle (category, vehicle_number, cc, engine_no, vehicle_photo, available, fuel_type, seat_capacity, rental_price, driver_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO vehicle (category, vehicle_number, cc, engine_no, vehicle_photo, available, fuel_type, seat_capacity, rental_price, driver_id, vehicle_model_name) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)";
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, vehicle.getCategory());
@@ -25,6 +25,7 @@ public class VehicleDAO {
             stmt.setInt(8, vehicle.getSeatCapacity());
             stmt.setDouble(9, vehicle.getRentalPrice());
             stmt.setInt(10, vehicle.getDriverId());
+            stmt.setString(11,vehicle.getVehicle_model_name());
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -109,7 +110,21 @@ public class VehicleDAO {
         }
         return vehicles;
     }
-
+    public boolean isDriverAssigned(int driverId, String category) {
+        String sql = "SELECT COUNT(*) FROM vehicle WHERE driver_id = ? AND category = ?";
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, driverId);
+            stmt.setString(2, category);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next() && rs.getInt(1) > 0) {
+                return true; // Driver is already assigned
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
     // Assign/change driver for a vehicle
     public boolean assignDriverToVehicle(int vehicleId, int driverId) {
         String sql = "UPDATE vehicle SET driver_id=? WHERE id=?";
@@ -153,6 +168,7 @@ public class VehicleDAO {
         vehicle.setSeatCapacity(rs.getInt("seat_capacity"));
         vehicle.setRentalPrice(rs.getDouble("rental_price"));
         vehicle.setDriverId(rs.getInt("driver_id"));
+        vehicle.setVehicle_model_name(rs.getString("vehicle_model_name"));
         return vehicle;
     }
 
@@ -174,6 +190,7 @@ public class VehicleDAO {
             stmt.setDouble(9, vehicle.getRentalPrice());
             stmt.setInt(10, vehicle.getDriverId());
             stmt.setInt(11, vehicle.getId());
+            stmt.setString(12, vehicle.getVehicle_model_name());
 
             int rowsUpdated = stmt.executeUpdate();
             return rowsUpdated > 0; // Return true if at least one row is updated
