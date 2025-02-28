@@ -106,7 +106,7 @@
         <div class="card">
             <h3>Book a Ride</h3>
             <p>Request a ride to your destination.</p>
-            <a href="booking.jsp" class="btn">Book Now</a>
+            <a href="welcome.jsp" class="btn">Book Now</a>
         </div>
 
         <div class="card">

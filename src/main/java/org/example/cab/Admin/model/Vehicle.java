@@ -8,11 +8,13 @@ public class Vehicle {
     private String cc;
     private String engineNo;
     private String vehiclePhoto;
+    private String vehicleType;
     private boolean available;
     private String fuelType;
     private int seatCapacity;
     private double rentalPrice;
     private int driverId;
+    private String driverName; // New field added
 
     // Default constructor
     public Vehicle() {
@@ -20,19 +22,21 @@ public class Vehicle {
 
     // Parameterized constructor
     public Vehicle(int id, String category, String vehicleNumber, String cc, String engineNo, String vehiclePhoto,
-                   boolean available, String fuelType, int seatCapacity, double rentalPrice, int driverId , String vehicle_model_name) {
+                   boolean available, String fuelType, int seatCapacity, double rentalPrice, int driverId , String vehicle_model_name, String driverName, String vehicleType) {
         this.id = id;
         this.category = category;
         this.vehicleNumber = vehicleNumber;
         this.cc = cc;
         this.engineNo = engineNo;
         this.vehiclePhoto = vehiclePhoto;
+        this.vehicleType = vehicleType;
         this.available = available;
         this.fuelType = fuelType;
         this.seatCapacity = seatCapacity;
         this.rentalPrice = rentalPrice;
         this.driverId = driverId;
         this.vehicle_model_name = vehicle_model_name;
+        this.driverName = driverName; // Initialize driver name
     }
 
     public Vehicle(int id, String category, String vehicleNumber, String cc, String engineNo, String fuelType, int seatCapacity, double rentalPrice, int driverId, String filePath, String vehicle_model_name) {
@@ -136,5 +140,20 @@ public class Vehicle {
         this.vehicle_model_name = vehicle_model_name;
     }
 
+    // New getter and setter for driverName
+    public String getDriverName() {
+        return driverName;
+    }
 
+    public void setDriverName(String driverName) {
+        this.driverName = driverName;
+    }
+
+    public String getVehicleType() {
+        return vehicleType;
+    }
+
+    public void setVehicleType(String vehicleType) {
+        this.vehicleType = vehicleType;
+    }
 }

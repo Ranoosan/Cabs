@@ -84,6 +84,8 @@
     <a href="${pageContext.request.contextPath}/Administrator/view_vehicles.jsp" class="btn btn-custom m-2">view Vehicles</a>
 
     <a href="${pageContext.request.contextPath}/Administrator/add_vehicle.jsp" class="btn btn-custom m-2">add  Vehicles</a>
+
+    <a href="${pageContext.request.contextPath}/Administrator/assign_vehicle.jsp" class="btn btn-custom m-2">assign  Vehicles</a>
 </div>
 
 <!-- Bootstrap JS -->

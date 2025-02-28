@@ -1,6 +1,7 @@
 package org.example.cab.Admin.dao;
 
 import org.example.cab.Admin.model.Vehicle;
+import org.example.cab.Admin.model.Driver;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +13,7 @@ public class VehicleDAO {
 
     // Add a new vehicle
     public boolean addVehicle(Vehicle vehicle) {
-        String sql = "INSERT INTO vehicle (category, vehicle_number, cc, engine_no, vehicle_photo, available, fuel_type, seat_capacity, rental_price, driver_id, vehicle_model_name) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)";
+        String sql = "INSERT INTO vehicle (category, vehicle_number, cc, engine_no, vehicle_photo, available, fuel_type, seat_capacity, rental_price, vehicle_model_name) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, vehicle.getCategory());
@@ -24,14 +25,96 @@ public class VehicleDAO {
             stmt.setString(7, vehicle.getFuelType());
             stmt.setInt(8, vehicle.getSeatCapacity());
             stmt.setDouble(9, vehicle.getRentalPrice());
-            stmt.setInt(10, vehicle.getDriverId());
-            stmt.setString(11,vehicle.getVehicle_model_name());
+            stmt.setString(10, vehicle.getVehicle_model_name());
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return false;
     }
+
+    public boolean assignVehicleToDriver(int vehicleId, int driverId) {
+        String checkSql = "SELECT COUNT(*) FROM vehicle_assignment WHERE vehicle_id = ?";
+        String updateAssignmentSql = "UPDATE vehicle_assignment SET driver_id = ? WHERE vehicle_id = ?";
+        String insertAssignmentSql = "INSERT INTO vehicle_assignment (vehicle_id, driver_id) VALUES (?, ?)";
+        String updateVehicleSql = "UPDATE vehicle SET driver_id = ? WHERE id = ?";
+
+        // Using try-with-resources for auto-closeable resources
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD)) {
+            // Start a transaction to ensure atomic operations
+            conn.setAutoCommit(false);
+
+            try (PreparedStatement checkStmt = conn.prepareStatement(checkSql)) {
+                // Check if the vehicle is already assigned
+                checkStmt.setInt(1, vehicleId);
+                ResultSet rs = checkStmt.executeQuery();
+                rs.next();
+                int count = rs.getInt(1);
+
+                boolean isSuccess = false;
+
+                // If the vehicle is already assigned, update both tables
+                if (count > 0) {
+                    try (PreparedStatement updateAssignmentStmt = conn.prepareStatement(updateAssignmentSql);
+                         PreparedStatement updateVehicleStmt = conn.prepareStatement(updateVehicleSql)) {
+
+                        // Update the vehicle_assignment table
+                        updateAssignmentStmt.setInt(1, driverId);
+                        updateAssignmentStmt.setInt(2, vehicleId);
+
+                        // Update the vehicle table
+                        updateVehicleStmt.setInt(1, driverId);
+                        updateVehicleStmt.setInt(2, vehicleId);
+
+                        // Execute both update queries
+                        int assignmentUpdated = updateAssignmentStmt.executeUpdate();
+                        int vehicleUpdated = updateVehicleStmt.executeUpdate();
+
+                        // If both are updated successfully, commit the transaction
+                        if (assignmentUpdated > 0 && vehicleUpdated > 0) {
+                            conn.commit();
+                            isSuccess = true;
+                        }
+                    }
+                } else {
+                    // If the vehicle is not assigned, insert into vehicle_assignment and update vehicle table
+                    try (PreparedStatement insertAssignmentStmt = conn.prepareStatement(insertAssignmentSql);
+                         PreparedStatement updateVehicleStmt = conn.prepareStatement(updateVehicleSql)) {
+
+                        // Insert into vehicle_assignment table
+                        insertAssignmentStmt.setInt(1, vehicleId);
+                        insertAssignmentStmt.setInt(2, driverId);
+
+                        // Update the vehicle table
+                        updateVehicleStmt.setInt(1, driverId);
+                        updateVehicleStmt.setInt(2, vehicleId);
+
+                        // Execute both insert and update queries
+                        int assignmentInserted = insertAssignmentStmt.executeUpdate();
+                        int vehicleUpdated = updateVehicleStmt.executeUpdate();
+
+                        // If both are successful, commit the transaction
+                        if (assignmentInserted > 0 && vehicleUpdated > 0) {
+                            conn.commit();
+                            isSuccess = true;
+                        }
+                    }
+                }
+
+                // Return the final success state
+                return isSuccess;
+            } catch (SQLException e) {
+                // Rollback transaction in case of any errors
+                conn.rollback();
+                e.printStackTrace();
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
 
 
 
@@ -110,34 +193,6 @@ public class VehicleDAO {
         }
         return vehicles;
     }
-    public boolean isDriverAssigned(int driverId, String category) {
-        String sql = "SELECT COUNT(*) FROM vehicle WHERE driver_id = ? AND category = ?";
-        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, driverId);
-            stmt.setString(2, category);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next() && rs.getInt(1) > 0) {
-                return true; // Driver is already assigned
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-    // Assign/change driver for a vehicle
-    public boolean assignDriverToVehicle(int vehicleId, int driverId) {
-        String sql = "UPDATE vehicle SET driver_id=? WHERE id=?";
-        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, driverId);
-            stmt.setInt(2, vehicleId);
-            return stmt.executeUpdate() > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
 
     // Get total vehicle count
     public int getTotalVehicleCount() {
@@ -152,6 +207,39 @@ public class VehicleDAO {
             e.printStackTrace();
         }
         return 0;
+    }
+
+    // Get all assigned vehicles with driver details
+    public List<Vehicle> getAssignedVehicles() {
+        List<Vehicle> vehicles = new ArrayList<>();
+        String sql = "SELECT v.*, d.fullName FROM vehicle v " +
+                "JOIN vehicle_assignment va ON v.id = va.vehicle_id " +
+                "JOIN driver d ON va.driver_id = d.id";
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                Vehicle vehicle = mapResultSetToVehicle(rs);
+                vehicle.setDriverName(rs.getString("fullName"));
+                vehicles.add(vehicle);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return vehicles;
+    }
+
+    // Unassign a vehicle from a driver
+    public boolean unassignVehicle(int vehicleId) {
+        String sql = "DELETE FROM vehicle_assignment WHERE vehicle_id=?";
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, vehicleId);
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     // Helper method to map ResultSet to Vehicle object
@@ -172,11 +260,10 @@ public class VehicleDAO {
         return vehicle;
     }
 
-
     // Update an existing vehicle
     public boolean updateVehicle(Vehicle vehicle) {
         String sql = "UPDATE vehicle SET category=?, vehicle_number=?, cc=?, engine_no=?, vehicle_photo=?, "
-                + "available=?, fuel_type=?, seat_capacity=?, rental_price=?, driver_id=? WHERE id=?";
+                + "available=?, fuel_type=?, seat_capacity=?, rental_price=?, vehicle_model_name=? WHERE id=?";
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, vehicle.getCategory());
@@ -184,24 +271,16 @@ public class VehicleDAO {
             stmt.setString(3, vehicle.getCc());
             stmt.setString(4, vehicle.getEngineNo());
             stmt.setString(5, vehicle.getVehiclePhoto());
-            stmt.setBoolean(6, vehicle.isAvailable()); // Ensure this value is set properly
+            stmt.setBoolean(6, vehicle.isAvailable());
             stmt.setString(7, vehicle.getFuelType());
             stmt.setInt(8, vehicle.getSeatCapacity());
             stmt.setDouble(9, vehicle.getRentalPrice());
-            stmt.setInt(10, vehicle.getDriverId());
+            stmt.setString(10, vehicle.getVehicle_model_name());
             stmt.setInt(11, vehicle.getId());
-            stmt.setString(12, vehicle.getVehicle_model_name());
-
-            int rowsUpdated = stmt.executeUpdate();
-            return rowsUpdated > 0; // Return true if at least one row is updated
+            return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
-            e.printStackTrace(); // Print stack trace for debugging
-            System.err.println("SQLState: " + e.getSQLState());
-            System.err.println("Error Code: " + e.getErrorCode());
-            System.err.println("Message: " + e.getMessage());
+            e.printStackTrace();
         }
         return false;
     }
-
-
 }

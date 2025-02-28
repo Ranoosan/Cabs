@@ -9,10 +9,7 @@ public class DriverDAO {
 
     // Add new driver
     public boolean addDriver(Driver driver) {
-        String sql = "INSERT INTO driversss (username, password, fullname, contactnumber, emailaddress, residentialaddress, licensenumber, licensetype, expirationdate, bankaccountnumber, emergencycontactdetails, medicalcertificate, copyofdrivinglicense, proofofaddress, termsaccepted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        String insertVehicleSQL = "INSERT INTO Combined_Vehicle_Driver (vehicle_category, vehicle_number, cc, "
-                + "engine_no, vehicle_photo, available, fuel_type, seat_capacity, rental_price, driver_id) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO driversss (username, password, fullname, contactnumber, emailaddress, residentialaddress, vehicleType, licensetype, expirationdate, bankaccountnumber, emergencycontactdetails, medicalcertificate, copyofdrivinglicense, proofofaddress, termsaccepted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -24,7 +21,7 @@ public class DriverDAO {
             stmt.setString(4, driver.getContactNumber());
             stmt.setString(5, driver.getEmailAddress());
             stmt.setString(6, driver.getResidentialAddress());
-            stmt.setString(7, driver.getLicenseNumber());
+            stmt.setString(7, driver.getvehicleType());
             stmt.setString(8, driver.getLicenseType());
 
             // Ensure proper date handling
@@ -65,7 +62,44 @@ public class DriverDAO {
                 driver.setContactNumber(rs.getString("contactnumber"));
                 driver.setEmailAddress(rs.getString("emailaddress"));
                 driver.setResidentialAddress(rs.getString("residentialaddress"));
-                driver.setLicenseNumber(rs.getString("licensenumber"));
+                driver.setVehicleType(rs.getString("vehicleType"));
+                driver.setLicenseType(rs.getString("licensetype"));
+                driver.setExpirationDate(rs.getDate("expirationdate").toLocalDate());
+                driver.setBankAccountNumber(rs.getString("bankaccountnumber"));
+                driver.setEmergencyContactDetails(rs.getString("emergencycontactdetails"));
+                driver.setMedicalCertificate(rs.getString("medicalcertificate"));
+                driver.setCopyOfDrivingLicense(rs.getString("copyofdrivinglicense"));
+                driver.setProofOfAddress(rs.getString("proofofaddress"));
+                driver.setTermsAccepted(rs.getBoolean("termsaccepted"));
+                drivers.add(driver);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return drivers;
+    }
+
+    // Get drivers by vehicle type
+    public List<Driver> getDriversByVehicleType(String vehicleType) {
+        List<Driver> drivers = new ArrayList<>();
+        String sql = "SELECT * FROM driversss WHERE vehicleType = ? OR vehicleType = 'all'";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, vehicleType);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Driver driver = new Driver();
+                driver.setId(rs.getInt("id"));
+                driver.setUsername(rs.getString("username"));
+                driver.setPassword(rs.getString("password"));
+                driver.setFullName(rs.getString("fullname"));
+                driver.setContactNumber(rs.getString("contactnumber"));
+                driver.setEmailAddress(rs.getString("emailaddress"));
+                driver.setResidentialAddress(rs.getString("residentialaddress"));
+                driver.setVehicleType(rs.getString("vehicleType"));
                 driver.setLicenseType(rs.getString("licensetype"));
                 driver.setExpirationDate(rs.getDate("expirationdate").toLocalDate());
                 driver.setBankAccountNumber(rs.getString("bankaccountnumber"));
@@ -101,10 +135,10 @@ public class DriverDAO {
     public Driver getDriverByVehicleId(String vehicleIdParam) {
         Driver driver = null;
         String query = "SELECT d.* FROM driversss d " +
-                "JOIN vehicle v ON d.id = v.driver_id " + // Adjust based on your schema
+                "JOIN vehicle v ON d.id = v.driver_id " +
                 "WHERE v.id = ?"; // Assuming vehicle ID is used for the vehicle table
 
-        try (Connection connection = DBConnection.getConnection(); // Get a database connection
+        try (Connection connection = DBConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
             preparedStatement.setString(1, vehicleIdParam);
@@ -112,21 +146,57 @@ public class DriverDAO {
 
             if (resultSet.next()) {
                 driver = new Driver();
-                driver.setId(resultSet.getInt("id")); // Adjust based on your Driver class attributes
-                driver.setFullName(resultSet.getString("fullname")); // Adjust based on your Driver class attributes
-                driver.setContactNumber(resultSet.getString("contactnumber")); // Adjust based on your Driver class attributes
+                driver.setId(resultSet.getInt("id"));
+                driver.setFullName(resultSet.getString("fullname"));
+                driver.setContactNumber(resultSet.getString("contactnumber"));
                 driver.setEmailAddress(resultSet.getString("emailAddress"));
                 driver.setResidentialAddress(resultSet.getString("residentialAddress"));
-                driver.setLicenseNumber(resultSet.getString("licenseNumber"));
+                driver.setVehicleType(resultSet.getString("vehicleType"));
                 driver.setLicenseType(resultSet.getString("licenseType"));
-                driver.setExpirationDate(resultSet.getDate("expirationDate").toLocalDate()); // Convert java.sql.Date to java.time.LocalDate if needed
-// Adjust based on your Driver class attributes
-
-                // Set other Driver attributes as needed
+                driver.setExpirationDate(resultSet.getDate("expirationDate").toLocalDate());
+                // Set other attributes as necessary
             }
-        } catch (Exception e) {
-            e.printStackTrace(); // Handle exceptions properly in a real application
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         return driver;
     }
+
+    // Get drivers by vehicle category
+    public List<Driver> getDriversByVehicleCategory(String category) {
+        List<Driver> drivers = new ArrayList<>();
+        String sql = "SELECT * FROM driversss WHERE vehicleType = ? ";  // Adjust column name if necessary
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, category);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Driver driver = new Driver();
+                driver.setId(rs.getInt("id"));
+                driver.setUsername(rs.getString("username"));
+                driver.setPassword(rs.getString("password"));
+                driver.setFullName(rs.getString("fullname"));
+                driver.setContactNumber(rs.getString("contactnumber"));
+                driver.setEmailAddress(rs.getString("emailaddress"));
+                driver.setResidentialAddress(rs.getString("residentialaddress"));
+                driver.setVehicleType(rs.getString("vehicleType"));
+                driver.setLicenseType(rs.getString("licensetype"));
+                driver.setExpirationDate(rs.getDate("expirationdate").toLocalDate());
+                driver.setBankAccountNumber(rs.getString("bankaccountnumber"));
+                driver.setEmergencyContactDetails(rs.getString("emergencycontactdetails"));
+                driver.setMedicalCertificate(rs.getString("medicalcertificate"));
+                driver.setCopyOfDrivingLicense(rs.getString("copyofdrivinglicense"));
+                driver.setProofOfAddress(rs.getString("proofofaddress"));
+                driver.setTermsAccepted(rs.getBoolean("termsaccepted"));
+                drivers.add(driver);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return drivers;
+    }
+
 }

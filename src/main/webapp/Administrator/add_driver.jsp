@@ -79,9 +79,17 @@
             <input type="text" class="form-control" id="residential_Address" name="residential_Address" required>
         </div>
         <div class="mb-3">
-            <label for="license_Number" class="form-label">License Number:</label>
-            <input type="text" class="form-control" id="license_Number" name="license_Number" required>
+            <label for="vehicleType" class="form-label">Vehicle Type:</label>
+            <select class="form-control" id="vehicleType" name="vehicleType" required>
+                <option value="">Select Vehicle Type</option>
+                <option value="Car">Car</option>
+                <option value="Van">Van</option>
+                <option value="Bike">Bike</option>
+                <option value="Auto">Auto</option>
+                <option value="All">All</option>
+            </select>
         </div>
+
         <div class="mb-3">
             <label for="license_Type" class="form-label">License Type:</label>
             <select class="form-select" id="license_Type" name="license_Type" required>

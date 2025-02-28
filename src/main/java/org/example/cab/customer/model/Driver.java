@@ -1,4 +1,4 @@
-package org.example.cab.Admin.model;
+package org.example.cab.customer.model;
 
 import java.time.LocalDate;
 
@@ -10,7 +10,7 @@ public class Driver {
     private String contact_Number;
     private String email_Address;
     private String residential_Address;
-    private String vehicleType;
+    private String license_Number;
     private String license_Type;
     private LocalDate expiration_Date;
     private String bank_Account_Number;
@@ -22,7 +22,7 @@ public class Driver {
 
     public Driver() {}
 
-    public Driver(int id, String username, String password, String full_Name, String contact_Number, String email_Address, String residential_Address, String vehicleType, String license_Type, LocalDate expiration_Date, String bank_Account_Number, String emergency_Contact_Details, String medical_Certificate, String copy_Of_Driving_License, String proof_Of_Address, boolean terms_Accepted) {
+    public Driver(int id, String username, String password, String full_Name, String contact_Number, String email_Address, String residential_Address, String license_Number, String license_Type, LocalDate expiration_Date, String bank_Account_Number, String emergency_Contact_Details, String medical_Certificate, String copy_Of_Driving_License, String proof_Of_Address, boolean terms_Accepted) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -30,7 +30,7 @@ public class Driver {
         this.contact_Number = contact_Number;
         this.email_Address = email_Address;
         this.residential_Address = residential_Address;
-        this.vehicleType = vehicleType;
+        this.license_Number = license_Number;
         this.license_Type = license_Type;
         this.expiration_Date = expiration_Date;
         this.bank_Account_Number = bank_Account_Number;
@@ -64,8 +64,8 @@ public class Driver {
     public String getResidentialAddress() { return residential_Address; }
     public void setResidentialAddress(String residentialAddress) { this.residential_Address = residentialAddress; }
 
-    public String getvehicleType() { return vehicleType; }
-    public void setVehicleType(String vehicleType) { this.vehicleType = vehicleType; }
+    public String getLicenseNumber() { return license_Number; }
+    public void setLicenseNumber(String licenseNumber) { this.license_Number = licenseNumber; }
 
     public String getLicenseType() { return license_Type; }
     public void setLicenseType(String licenseType) { this.license_Type = licenseType; }
@@ -100,7 +100,7 @@ public class Driver {
                 ", contact_Number='" + contact_Number + '\'' +
                 ", email_Address='" + email_Address + '\'' +
                 ", residential_Address='" + residential_Address + '\'' +
-                ", vehicleType='" + vehicleType + '\'' +
+                ", license_Number='" + license_Number + '\'' +
                 ", license_Type='" + license_Type + '\'' +
                 ", expiration_Date=" + expiration_Date +
                 ", bank_Account_Number='" + bank_Account_Number + '\'' +

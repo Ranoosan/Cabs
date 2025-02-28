@@ -32,15 +32,7 @@ public class AddVehicleServlet extends HttpServlet {
             String fuelType = request.getParameter("fuel_type");
             int seatCapacity = Integer.parseInt(request.getParameter("seat_capacity"));
             double rentalPrice = Double.parseDouble(request.getParameter("rental_price"));
-            int driverId = Integer.parseInt(request.getParameter("driver_id"));
             String vehicle_model_name = request.getParameter("vehicle_model_name");
-
-            VehicleDAO dao = new VehicleDAO();
-            if (dao.isDriverAssigned(driverId, category)) {
-                request.setAttribute("errorMessage", "This driver is already assigned to a " + category + ". Please choose another driver.");
-                request.getRequestDispatcher("add_vehicle.jsp").forward(request, response);
-                return;
-            }
 
             Part filePart = request.getPart("vehicle_photo"); // Make sure this matches the input field name
             if (filePart == null) {
@@ -65,13 +57,13 @@ public class AddVehicleServlet extends HttpServlet {
             vehicle.setSeatCapacity(seatCapacity);
             vehicle.setRentalPrice(rentalPrice);
             vehicle.setVehiclePhoto("uploads/" + fileName);
-            vehicle.setDriverId(driverId);
             vehicle.setVehicle_model_name(vehicle_model_name);
 
+            VehicleDAO dao = new VehicleDAO();
             if (dao.addVehicle(vehicle)) {
                 response.sendRedirect("view_vehicles.jsp"); // Redirect to the vehicle list page
             } else {
-                request.setAttribute("errorMessage", "This driver is already assigned to a " + category + ". Please choose another driver.");
+                request.setAttribute("errorMessage", "Error adding vehicle. Please try again.");
                 request.getRequestDispatcher("add_vehicle.jsp").forward(request, response);
             }
         } catch (Exception e) {

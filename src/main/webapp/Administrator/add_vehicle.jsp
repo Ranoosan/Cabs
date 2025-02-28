@@ -1,6 +1,3 @@
-<%@ page import="org.example.cab.Admin.dao.DriverDAO" %>
-<%@ page import="org.example.cab.Admin.model.Driver" %>
-<%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -83,24 +80,6 @@
         <select id="available" name="available">
             <option value="true">Yes</option>
             <option value="false">No</option>
-        </select>
-
-        <label for="driver_id">Assign Driver:</label>
-        <select id="driver_id" name="driver_id" required>
-            <option value="">Select Driver</option>
-            <%
-                try {
-                    DriverDAO driverDAO = new DriverDAO();
-                    List<Driver> drivers = driverDAO.getAllDrivers();
-                    for (Driver driver : drivers) {
-            %>
-            <option value="<%= driver.getId() %>"><%= driver.getFullName() %> (ID: <%= driver.getId() %>)</option>
-            <%
-                    }
-                } catch (Exception e) {
-                    out.println("<option value=''>Error fetching drivers</option>");
-                }
-            %>
         </select>
 
         <label for="vehicle_photo">Vehicle Photo:</label>

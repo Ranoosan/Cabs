@@ -35,7 +35,7 @@ public class AddDriverController extends HttpServlet {
         String contactNumber = request.getParameter("contact_Number");
         String emailAddress = request.getParameter("email_Address");
         String residentialAddress = request.getParameter("residential_Address");
-        String licenseNumber = request.getParameter("license_Number");
+        String vehicleType = request.getParameter("vehicleType");
         String licenseType = request.getParameter("license_Type");
         String expirationDateStr = request.getParameter("expiration_Date");
         String bankAccountNumber = request.getParameter("bank_Account_Number");
@@ -69,7 +69,7 @@ public class AddDriverController extends HttpServlet {
         driver.setContactNumber(contactNumber);
         driver.setEmailAddress(emailAddress);
         driver.setResidentialAddress(residentialAddress);
-        driver.setLicenseNumber(licenseNumber);
+        driver.setVehicleType(vehicleType);
         driver.setLicenseType(licenseType);
         driver.setExpirationDate(expirationDate);
         driver.setBankAccountNumber(bankAccountNumber);
