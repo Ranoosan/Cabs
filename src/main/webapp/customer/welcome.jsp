@@ -116,6 +116,12 @@
         </div>
 
         <div class="card">
+            <h3>Ride History</h3>
+            <p>View your previous trips and receipts.</p>
+            <a href="make_booking.jsp" class="btn">Book  vehicles</a>
+        </div>
+
+        <div class="card">
             <h3>Profile</h3>
             <p>Manage your account and settings.</p>
             <a href="profile.jsp" class="btn">View Profile</a>

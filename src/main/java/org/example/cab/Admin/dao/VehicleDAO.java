@@ -161,6 +161,8 @@ public class VehicleDAO {
         return vehicles;
     }
 
+
+
     // Get vehicle by ID
     public Vehicle getVehicleById(int id) {
         String sql = "SELECT * FROM vehicle WHERE id=?";

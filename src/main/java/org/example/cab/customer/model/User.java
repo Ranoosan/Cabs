@@ -12,6 +12,7 @@ public class User {
     private String nic;
     private Date dateOfBirth;
 
+
     public User() {}
 
     public User(String username, String password, String email, String contactNumber, String address, String gender, String nic, Date dateOfBirth) {
@@ -23,6 +24,7 @@ public class User {
         this.gender = gender;
         this.nic = nic;
         this.dateOfBirth = dateOfBirth;
+
     }
 
 

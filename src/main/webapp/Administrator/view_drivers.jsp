@@ -60,7 +60,7 @@
             <td><%= driver.getContactNumber() %></td>
             <td><%= driver.getEmailAddress() %></td>
             <td><%= driver.getResidentialAddress() %></td>
-            <td><%= driver.getLicenseNumber() %></td>
+            <td><%= driver.getvehicleType() %></td>
             <td><%= driver.getLicenseType() %></td>
             <td><%= driver.getExpirationDate() %></td>
             <td><%= driver.getBankAccountNumber() %></td>
