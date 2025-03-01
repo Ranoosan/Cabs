@@ -100,6 +100,7 @@
 
 <div class="container">
     <h1>Welcome, <%= user.getUsername() %>!</h1>
+
     <p>Your email: <%= user.getEmail() %></p>
 
     <div class="card-container">
@@ -113,6 +114,12 @@
             <h3>Ride History</h3>
             <p>View your previous trips and receipts.</p>
             <a href="view_cus_vehicle.jsp" class="btn">View vehicles</a>
+        </div>
+
+        <div class="card">
+            <h3>Ride History</h3>
+            <p>View your previous trips and receipts.</p>
+            <a href="make_booking.jsp" class="btn">Book  vehicles</a>
         </div>
 
         <div class="card">

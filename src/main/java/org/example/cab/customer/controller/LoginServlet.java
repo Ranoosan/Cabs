@@ -13,6 +13,7 @@ import java.io.IOException;
 @WebServlet("/customer/login")
 public class LoginServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
         String username = request.getParameter("username");
         String password = request.getParameter("password");
 
@@ -20,10 +21,12 @@ public class LoginServlet extends HttpServlet {
         User user = userDAO.validateUser(username, password);
 
         if (user != null) {
-            // Create session and store user data
+            // Create session and store user details
             HttpSession session = request.getSession();
             session.setAttribute("user", user);
+            session.setAttribute("userId", user.getId());  // Store ID separately
             session.setAttribute("username", user.getUsername());
+            session.setAttribute("email", user.getEmail());
 
             // Redirect to dashboard after login
             response.sendRedirect(request.getContextPath() + "/customer/welcome.jsp");

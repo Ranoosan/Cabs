@@ -90,12 +90,16 @@
         <p><strong>Name:</strong> <%= driver.getFullName() %></p>
         <p><strong>Contact Number:</strong> <%= driver.getContactNumber() %></p>
         <p><strong>Email:</strong> <%= driver.getEmailAddress() %></p>
-        <p><strong>License Number:</strong> <%= driver.getLicenseNumber() %></p>
+        <p><strong>Address :</strong> <%= driver.getResidentialAddress() %></p>
         <p><strong>License Type:</strong> <%= driver.getLicenseType() %></p>
         <p><strong>Expiry Date of the License:</strong> <%= driver.getExpirationDate() %></p>
     </div>
 
     <a href="view_cus_vehicle.jsp" class="btn btn-primary mt-3">Back to Vehicles</a>
+
+
+
+
 
 
 </div>

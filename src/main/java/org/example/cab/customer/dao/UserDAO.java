@@ -1,5 +1,6 @@
 package org.example.cab.customer.dao;
 
+import jakarta.servlet.http.HttpSession;
 import org.example.cab.customer.model.User;
 
 import java.sql.*;
@@ -47,14 +48,14 @@ public class UserDAO {
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, username);
-            stmt.setString(2, password); // 🔴 Consider hashing the password before storing!
+            stmt.setString(2, password); // 🔴 Consider hashing the password before checking!
 
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                return new User(rs.getString("username"), rs.getString("password"), rs.getString("email"),
-                        rs.getString("contact_number"), rs.getString("address"), rs.getString("gender"),
-                        rs.getString("nic"), rs.getDate("date_of_birth")); // Assuming you want to return the date as well
+                return new User(rs.getInt("id"), rs.getString("username"), rs.getString("password"),
+                        rs.getString("email"), rs.getString("contact_number"), rs.getString("address"),
+                        rs.getString("gender"), rs.getString("nic"), rs.getDate("date_of_birth"));
             }
 
         } catch (SQLException e) {
@@ -62,4 +63,45 @@ public class UserDAO {
         }
         return null;  // Return null if login fails
     }
+
+
+    public User getUserBySession(HttpSession session) {
+        User user = null;
+
+        // Retrieve user from session
+        if (session != null) {
+            user = (User) session.getAttribute("user");
+        }
+
+        // If no user is found in session, return null
+        if (user == null) {
+            return null;
+        }
+
+        int userId = user.getId(); // Get user ID from session
+
+        String query = "SELECT * FROM users WHERE id = ?"; // Query to get user details
+
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+            preparedStatement.setInt(1, userId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                user = new User();
+                user.setId(resultSet.getInt("id"));
+
+                user.setEmail(resultSet.getString("email"));
+                user.setContactNumber(resultSet.getString("contactnumber"));
+
+                // Add other attributes as needed
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return user;
+    }
+
 }

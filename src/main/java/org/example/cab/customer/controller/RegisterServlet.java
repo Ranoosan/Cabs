@@ -25,8 +25,9 @@ public class RegisterServlet extends HttpServlet {
         String dobString = request.getParameter("date_of_birth");
         Date dateOfBirth = Date.valueOf(dobString); // Convert String to java.sql.Date
 
-        User user = new User(username, password, email, contactNumber, address, gender, nic, dateOfBirth);
+        User user = new User(0, username, password, email, contactNumber, address, gender, nic, dateOfBirth); // Use 0 or default value for id
         UserDAO userDAO = new UserDAO();
+
 
         if (userDAO.registerUser(user)) {
             request.setAttribute("user", user);
