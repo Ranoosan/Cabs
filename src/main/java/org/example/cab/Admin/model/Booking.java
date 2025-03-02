@@ -16,6 +16,8 @@ public class Booking {
     private String accessibilityNeeds;
     private boolean termsAccepted;
     private Timestamp createdAt; // Change Date to Timestamp
+    private String status; // Added for status
+    private Timestamp updatedAt; // Added for updatedAt
 
     // Getters and Setters
 
@@ -121,5 +123,23 @@ public class Booking {
 
     public void setCreatedAt(Timestamp createdAt) {
         this.createdAt = createdAt;
+    }
+
+    // Getter and Setter for 'status'
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    // Getter and Setter for 'updatedAt'
+    public Timestamp getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Timestamp updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

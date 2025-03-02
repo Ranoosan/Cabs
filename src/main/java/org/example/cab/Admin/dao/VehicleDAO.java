@@ -38,6 +38,7 @@ public class VehicleDAO {
         String updateAssignmentSql = "UPDATE vehicle_assignment SET driver_id = ? WHERE vehicle_id = ?";
         String insertAssignmentSql = "INSERT INTO vehicle_assignment (vehicle_id, driver_id) VALUES (?, ?)";
         String updateVehicleSql = "UPDATE vehicle SET driver_id = ? WHERE id = ?";
+        String updateBookingSql = "UPDATE bookings SET driver_id = ? WHERE vehicle_id = ?"; // New update for booking
 
         // Using try-with-resources for auto-closeable resources
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD)) {
@@ -53,10 +54,11 @@ public class VehicleDAO {
 
                 boolean isSuccess = false;
 
-                // If the vehicle is already assigned, update both tables
                 if (count > 0) {
+                    // If the vehicle is already assigned, update all tables
                     try (PreparedStatement updateAssignmentStmt = conn.prepareStatement(updateAssignmentSql);
-                         PreparedStatement updateVehicleStmt = conn.prepareStatement(updateVehicleSql)) {
+                         PreparedStatement updateVehicleStmt = conn.prepareStatement(updateVehicleSql);
+                         PreparedStatement updateBookingStmt = conn.prepareStatement(updateBookingSql)) {
 
                         // Update the vehicle_assignment table
                         updateAssignmentStmt.setInt(1, driverId);
@@ -66,20 +68,26 @@ public class VehicleDAO {
                         updateVehicleStmt.setInt(1, driverId);
                         updateVehicleStmt.setInt(2, vehicleId);
 
-                        // Execute both update queries
+                        // Update the booking table to reflect the new driver for this vehicle
+                        updateBookingStmt.setInt(1, driverId);
+                        updateBookingStmt.setInt(2, vehicleId);
+
+                        // Execute all updates
                         int assignmentUpdated = updateAssignmentStmt.executeUpdate();
                         int vehicleUpdated = updateVehicleStmt.executeUpdate();
+                        int bookingUpdated = updateBookingStmt.executeUpdate();
 
-                        // If both are updated successfully, commit the transaction
-                        if (assignmentUpdated > 0 && vehicleUpdated > 0) {
+                        // If all updates are successful, commit the transaction
+                        if (assignmentUpdated > 0 && vehicleUpdated > 0 && bookingUpdated > 0) {
                             conn.commit();
                             isSuccess = true;
                         }
                     }
                 } else {
-                    // If the vehicle is not assigned, insert into vehicle_assignment and update vehicle table
+                    // If the vehicle is not assigned, insert into vehicle_assignment and update vehicle & booking table
                     try (PreparedStatement insertAssignmentStmt = conn.prepareStatement(insertAssignmentSql);
-                         PreparedStatement updateVehicleStmt = conn.prepareStatement(updateVehicleSql)) {
+                         PreparedStatement updateVehicleStmt = conn.prepareStatement(updateVehicleSql);
+                         PreparedStatement updateBookingStmt = conn.prepareStatement(updateBookingSql)) {
 
                         // Insert into vehicle_assignment table
                         insertAssignmentStmt.setInt(1, vehicleId);
@@ -89,19 +97,23 @@ public class VehicleDAO {
                         updateVehicleStmt.setInt(1, driverId);
                         updateVehicleStmt.setInt(2, vehicleId);
 
-                        // Execute both insert and update queries
+                        // Update the booking table to reflect the new driver
+                        updateBookingStmt.setInt(1, driverId);
+                        updateBookingStmt.setInt(2, vehicleId);
+
+                        // Execute insert and updates
                         int assignmentInserted = insertAssignmentStmt.executeUpdate();
                         int vehicleUpdated = updateVehicleStmt.executeUpdate();
+                        int bookingUpdated = updateBookingStmt.executeUpdate();
 
-                        // If both are successful, commit the transaction
-                        if (assignmentInserted > 0 && vehicleUpdated > 0) {
+                        // If all are successful, commit the transaction
+                        if (assignmentInserted > 0 && vehicleUpdated > 0 && bookingUpdated > 0) {
                             conn.commit();
                             isSuccess = true;
                         }
                     }
                 }
 
-                // Return the final success state
                 return isSuccess;
             } catch (SQLException e) {
                 // Rollback transaction in case of any errors
@@ -114,6 +126,7 @@ public class VehicleDAO {
         }
         return false;
     }
+
 
 
 
@@ -148,7 +161,7 @@ public class VehicleDAO {
     // Get all vehicles
     public List<Vehicle> getAllVehicles() {
         List<Vehicle> vehicles = new ArrayList<>();
-        String sql = "SELECT * FROM vehicle";
+        String sql = "SELECT * FROM vehicle WHERE status = 'Available'";
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
              PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
