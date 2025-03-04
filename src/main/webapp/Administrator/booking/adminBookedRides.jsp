@@ -72,8 +72,7 @@
             <td><%= currentStatus %></td>
             <td>
                 <!-- Actions for Edit and Delete -->
-                <a href="editBooking.jsp?bookingId=<%= booking.getBookingId() %>" class="btn btn-warning btn-sm">Edit</a>
-                <a href="deleteBooking.jsp?bookingId=<%= booking.getBookingId() %>" class="btn btn-danger btn-sm">Delete</a>
+                <a href="assignVehicle.jsp?vehicleId=<%= booking.getVehicleId() %>" class="btn btn-success btn-sm">Assign</a>
             </td>
         </tr>
         <%
