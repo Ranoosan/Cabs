@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.example.cab.Admin.model.Booking;
 import org.example.cab.Admin.model.Vehicle;
+import org.example.cab.customer.model.User;
 
 public class BookingDao {
 
@@ -80,6 +81,71 @@ public class BookingDao {
         }
         return vehicle;
     }
+    public List<Booking> getBookingsByDriverId(int driverId) {
+        List<Booking> bookings = new ArrayList<>();
+        String sql = "SELECT b.booking_id, b.username, b.vehicle_id, b.pickup_location, b.drop_off_location, b.booking_date, b.status, " +
+                "u.email, u.contact_number, u.address FROM bookings b " + // Changed "booking" to "bookings"
+                "JOIN users u ON b.username = u.username " +
+                "WHERE b.driver_id = ?";
+
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, driverId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Booking booking = new Booking();
+                    booking.setBookingId(rs.getInt("booking_id"));
+                    booking.setUsername(rs.getString("username"));
+                    booking.setVehicleId(rs.getInt("vehicle_id"));
+                    booking.setPickupLocation(rs.getString("pickup_location"));
+                    booking.setDropoffLocation(rs.getString("drop_off_location"));
+                    booking.setPickupDateTime(rs.getTimestamp("booking_date"));
+                    booking.setStatus(rs.getString("status"));
+
+                    // Set User details
+                    User user = new User();
+                    user.setEmail(rs.getString("email"));
+                    user.setContactNumber(rs.getString("contact_number"));
+                    user.setAddress(rs.getString("address"));
+
+                    user.getId(user);
+                    bookings.add(booking);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error fetching bookings for driver ID: " + driverId);
+            e.printStackTrace(); // Consider replacing with a logger
+        }
+        return bookings;
+    }
+
+    public User getUserByUsername(String username) {
+        User user = null;
+        String sql = "SELECT * FROM users WHERE username = ?";
+
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, username);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                user = new User();
+                user.setId(rs.getInt("id"));
+                user.setUsername(rs.getString("username"));
+                user.setEmail(rs.getString("email"));
+                user.setContactNumber(rs.getString("contact_number"));
+                user.setAddress(rs.getString("address"));
+                user.setGender(rs.getString("gender"));
+                user.setNic(rs.getString("nic"));
+                user.setDateOfBirth(rs.getDate("date_of_birth"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return user;
+    }
+
 
     // Method to get all bookings
     public List<Booking> getAllBookings() {
@@ -153,16 +219,21 @@ public class BookingDao {
     }
 
     // Method to update vehicle status
-    public boolean updateVehicleStatus(int vehicleId, String status) {
-        String sql = "UPDATE vehicle SET status = ?, updated_at = NOW() WHERE id = ?";
+    public boolean updateBookingStatuss(int bookingId, String status) {
+        String sql = "UPDATE bookings SET status = ?, updated_at = NOW() WHERE booking_id = ?";
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, status);
-            stmt.setInt(2, vehicleId);
+            stmt.setInt(2, bookingId);
 
             int rowsAffected = stmt.executeUpdate();
+            if (rowsAffected > 0 && "Rejected".equals(status)) {
+                // If booking is rejected, move to rejected bookings table
+                Booking booking = getBookingById(bookingId);
+                saveRejectedBooking(booking);
+            }
             return rowsAffected > 0;
 
         } catch (SQLException e) {
@@ -234,4 +305,91 @@ public class BookingDao {
         }
         return false;
     }
+    // Method to save rejected booking
+    public boolean saveRejectedBooking(Booking booking) {
+        String insertSql = "INSERT INTO rejected_bookings (booking_id, username, vehicle_id, driver_id, pickup_location, drop_off_location, booking_date, payment_method, special_needs, status) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD)) {
+            try (PreparedStatement insertStmt = conn.prepareStatement(insertSql)) {
+                insertStmt.setInt(1, booking.getBookingId());
+                insertStmt.setString(2, booking.getUsername());
+                insertStmt.setInt(3, booking.getVehicleId());
+                insertStmt.setInt(4, booking.getDriverId());
+                insertStmt.setString(5, booking.getPickupLocation());
+                insertStmt.setString(6, booking.getDropoffLocation());
+                insertStmt.setTimestamp(7, booking.getPickupDateTime());
+                insertStmt.setString(8, booking.getPaymentMethod());
+                insertStmt.setString(9, booking.getSpecialRequests());
+                insertStmt.setString(10, booking.getStatus());
+
+                int rowsAffected = insertStmt.executeUpdate();
+                return rowsAffected > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    // Method to get all rejected bookings
+    // Method to get all rejected bookings from bookings table
+    public List<Booking> getAllRejectedBookings() {
+        List<Booking> rejectedBookings = new ArrayList<>();
+        String sql = "SELECT * FROM rejected_bookings";
+
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                Booking booking = new Booking();
+                booking.setBookingId(rs.getInt("booking_id"));
+                booking.setUsername(rs.getString("username"));
+                booking.setDriverId(rs.getInt("driver_id"));
+                booking.setVehicleId(rs.getInt("vehicle_id"));
+                booking.setPickupLocation(rs.getString("pickup_location"));
+                booking.setDropoffLocation(rs.getString("drop_off_location"));
+                booking.setPickupDateTime(rs.getTimestamp("booking_date"));
+                booking.setPaymentMethod(rs.getString("payment_method"));
+                booking.setSpecialRequests(rs.getString("special_needs"));
+                booking.setStatus(rs.getString("status"));
+                rejectedBookings.add(booking);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return rejectedBookings;
+    }
+
+    public Booking getBookingById(int bookingId) {
+        Booking booking = null;
+        String sql = "SELECT * FROM bookings WHERE booking_id = ?";
+
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, bookingId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    booking = new Booking();
+                    booking.setBookingId(rs.getInt("booking_id"));
+                    booking.setUsername(rs.getString("username"));
+                    booking.setVehicleId(rs.getInt("vehicle_id"));
+                    booking.setDriverId(rs.getInt("driver_id"));
+                    booking.setPickupLocation(rs.getString("pickup_location"));
+                    booking.setDropoffLocation(rs.getString("drop_off_location"));
+                    booking.setPickupDateTime(rs.getTimestamp("booking_date"));
+                    booking.setPaymentMethod(rs.getString("payment_method"));
+                    booking.setSpecialRequests(rs.getString("special_needs"));
+                    booking.setStatus(rs.getString("status"));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return booking;
+    }
+
 }

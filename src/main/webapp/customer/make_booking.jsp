@@ -103,7 +103,7 @@
     // Loop through the vehicles and display each one
     for (Vehicle vehicle : vehicles) {
   %>
-  <div class="card vehicle-card" onclick="window.location='<%= request.getContextPath() %>/customer/booking.jsp?vehicleId=<%= vehicle.getId() %>&customerId=<%= user.getId() %>'">
+  <div class="card vehicle-card" onclick="window.location='<%= request.getContextPath() %>/customer/booking.jsp?vehicleId=<%= vehicle.getId() %>&customerId=<%= user.getId(user) %>'">
 
     <img src="<%= request.getContextPath() + "/" + vehicle.getVehiclePhoto() %>" class="card-img-top vehicle-image" alt="Vehicle Image">
     <div class="card-body">

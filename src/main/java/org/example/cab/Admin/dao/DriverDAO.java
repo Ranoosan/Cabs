@@ -43,6 +43,24 @@ public class DriverDAO {
         }
         return false;
     }
+    public boolean updatePendingBookings(int vehicleId, int newDriverId) {
+        String updateQuery = "UPDATE bookings SET driver_id = ? WHERE vehicle_id = ? AND status = 'pending'";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement updateStmt = conn.prepareStatement(updateQuery)) {
+
+            updateStmt.setInt(1, newDriverId);
+            updateStmt.setInt(2, vehicleId);
+            int rowsUpdated = updateStmt.executeUpdate();
+
+            return rowsUpdated > 0;
+
+        } catch (SQLException e) {
+            System.err.println("SQL error in updating pending bookings: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return false;
+    }
 
     // Get all drivers
     public List<Driver> getAllDrivers() {
@@ -78,6 +96,7 @@ public class DriverDAO {
         }
         return drivers;
     }
+
 
     // Get drivers by vehicle type
     public List<Driver> getDriversByVehicleType(String vehicleType) {

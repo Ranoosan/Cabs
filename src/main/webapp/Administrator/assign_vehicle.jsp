@@ -11,16 +11,28 @@
   if ("POST".equalsIgnoreCase(request.getMethod())) {
     int vehicleId = Integer.parseInt(request.getParameter("vehicleId"));
     int driverId = Integer.parseInt(request.getParameter("driverId"));
+
     boolean assigned = vehicleDAO.assignVehicleToDriver(vehicleId, driverId);
+
     if (assigned) {
-      out.println("<script>alert('Vehicle assigned successfully!'); </script>");
+      // Update pending bookings after successful assignment
+      boolean updated = driverDAO.updatePendingBookings(vehicleId, driverId);
+
+      if (updated) {
+        out.println("<script>alert('Vehicle assigned and pending bookings updated successfully!'); </script>");
+      } else {
+        out.println("<script>alert('Vehicle assigned, but no pending bookings were updated.'); </script>");
+      }
+
     } else {
       out.println("<script>alert('Error assigning vehicle.');</script>");
     }
+
     // Re-fetch vehicles after the assignment to get the updated driver name
     vehicles = vehicleDAO.getAllVehicles();
   }
 %>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -42,7 +54,7 @@
 <div class="vehicle-container">
   <% for (Vehicle vehicle : vehicles) { %>
   <div class="vehicle-card">
-    <img src="<%= vehicle.getVehiclePhoto() != null ? vehicle.getVehiclePhoto() : "/uploads/default-image-path.jpg" %>" class="vehicle-image" alt="Vehicle Image">
+    <img src="<%= vehicle.getVehiclePhoto() != null ? vehicle.getVehiclePhoto() : "/uploads/default-image-path.jpg" %>" class="vehicle-image" alt="/uploads/default-image-path.jpg">
     <h5 class="mt-2">Model: <%= vehicle.getCategory() %></h5>
     <p><strong>Number:</strong> <%= vehicle.getVehicleNumber() %><br>
       <strong>Driver:</strong> <%= vehicle.getDriverName() != null ? vehicle.getDriverName() : "" %><br>

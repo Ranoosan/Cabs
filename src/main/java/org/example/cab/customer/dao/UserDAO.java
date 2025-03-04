@@ -78,7 +78,7 @@ public class UserDAO {
             return null;
         }
 
-        int userId = user.getId(); // Get user ID from session
+        int userId = user.getId(user); // Get user ID from session
 
         String query = "SELECT * FROM users WHERE id = ?"; // Query to get user details
 

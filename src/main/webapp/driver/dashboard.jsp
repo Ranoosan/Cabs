@@ -70,6 +70,9 @@
           <a class="nav-link" href="myVehicles.jsp">My Vehicles</a>
         </li>
         <li class="nav-item">
+          <a class="nav-link" href="rides.jsp">My Rides</a>
+        </li>
+        <li class="nav-item">
           <a class="nav-link" href="logout.jsp">Logout</a>
         </li>
       </ul>
