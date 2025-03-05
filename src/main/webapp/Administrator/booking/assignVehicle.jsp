@@ -17,18 +17,20 @@
             boolean assigned = vehicleDAO.assignVehicleToDriver(vehicleId, driverId);
 
             if (assigned) {
-                boolean updated = driverDAO.updatePendingBookings(vehicleId, driverId);
+                // Update pending bookings after successful assignment
+                boolean updated = driverDAO.updatePendingBookingsss(vehicleId, driverId);
+
                 if (updated) {
-                    message = "Vehicle assigned successfully, and pending bookings updated!";
-                    status = "success";
+                    out.print("<script>alert('Vehicle assigned and pending bookings updated successfully!'); window.location.href='adminBookedRides.jsp';</script>");
                 } else {
-                    message = "Vehicle assigned, but failed to update pending bookings!";
-                    status = "warning";
+                    out.print("<script>alert('Vehicle assigned, but no pending bookings were updated.'); window.location.href='adminBookedRides.jsp';</script>");
                 }
+
             } else {
-                message = "Error assigning vehicle!";
-                status = "danger";
+                out.println("<script>alert('Error assigning vehicle.');</script>");
             }
+
+
         } catch (Exception e) {
             e.printStackTrace();
             message = "Invalid data!";
@@ -43,6 +45,7 @@
     if (vehicleIdParam != null && !vehicleIdParam.isEmpty()) {
         int vehicleId = Integer.parseInt(vehicleIdParam);
         Vehicle vehicle = vehicleDAO.getVehicleById(vehicleId);
+
         vehicles = (vehicle != null) ? List.of(vehicle) : List.of();
     } else {
         vehicles = vehicleDAO.getAllVehicles();
@@ -80,6 +83,7 @@
                 <div class="card-body">
                     <h5 class="card-title">Model: <%= vehicle.getCategory() %></h5>
                     <p><strong>Number:</strong> <%= vehicle.getVehicleNumber() %></p>
+                    <p><strong>Driver:</strong> <%= vehicle.getDriverId() %></p>
                     <form method="post">
                         <input type="hidden" name="vehicleId" value="<%= vehicle.getId() %>">
                         <label for="driverId">Assign Driver:</label>

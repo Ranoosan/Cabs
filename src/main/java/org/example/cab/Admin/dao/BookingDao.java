@@ -47,7 +47,8 @@ public class BookingDao {
                 insertStmt.setString(7, booking.getPaymentMethod());
                 insertStmt.setString(8, booking.getSpecialRequests());
                 insertStmt.setTimestamp(9, booking.getCreatedAt());
-                insertStmt.setTimestamp(10, new Timestamp(System.currentTimeMillis())); // Set updated_at
+                insertStmt.setTimestamp(10, new Timestamp(System.currentTimeMillis()));
+                // Set updated_at
 
                 int rowsAffected = insertStmt.executeUpdate();
                 if (rowsAffected > 0) {

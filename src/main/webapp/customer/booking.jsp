@@ -65,6 +65,38 @@
     return;
   }
 %>
+<script>
+  function calculateBill() {
+    var rentalPrice = parseFloat(document.getElementById("rentalPrice").value);
+    var couponCode = document.getElementById("couponCode").value.trim();
+
+    if (!isNaN(rentalPrice) && couponCode !== "") {
+      var xhr = new XMLHttpRequest();
+      xhr.open("GET", "applyCoupon.jsp?coupon=" + encodeURIComponent(couponCode), true);
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+          var response = xhr.responseText.trim();
+          if (response === "Invalid or expired coupon code.") {
+            alert(response);
+          } else if (response === "Coupon code is required.") {
+            alert(response);
+          } else {
+            var discount = parseFloat(response);
+            var discountAmount = (rentalPrice * discount) / 100;
+            var finalAmount = rentalPrice - discountAmount;
+
+            document.getElementById("discountAmount").innerHTML = "Discount: " + discountAmount.toFixed(2) + " LKR";
+            document.getElementById("finalAmount").innerHTML = "Final Price: " + finalAmount.toFixed(2) + " LKR";
+          }
+        }
+      };
+      xhr.send();
+    } else {
+      alert("Please enter a valid rental price and coupon code.");
+    }
+  }
+
+</script>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container">
     <a class="navbar-brand" href="customer_dashboard.jsp">Cab Services</a>
@@ -170,8 +202,9 @@
     String status = "Pending";
     String createdAt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
-    String sql = "INSERT INTO bookings (username, driver_id, vehicle_id, pickup_location, drop_off_location, special_needs, booking_date, status, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
+
+    String sql = "INSERT INTO bookings (username, driver_id, vehicle_id, pickup_location, drop_off_location, special_needs, booking_date, status, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
     PreparedStatement pstmt = null;
     try {
       pstmt = conn.prepareStatement(sql);
@@ -184,6 +217,9 @@
       pstmt.setString(7, bookingDate);
       pstmt.setString(8, status);
       pstmt.setString(9, createdAt);
+           // Set the final amount
+
+
 
       int rows = pstmt.executeUpdate();
       if (rows > 0) {
@@ -238,7 +274,7 @@
       <div class="mb-3">
         <label for="dropOffLocation" class="form-label">Drop-off Location</label>
         <select id="dropOffLocation" name="dropOffLocation" class="form-control" required>
-          <option value="">Select Drop_Off Location</option>
+          <option value="">Select Drop-Off Location</option>
           <option value="Colombo">Colombo</option>
           <option value="Kandy">Kandy</option>
           <option value="Galle">Galle</option>
@@ -260,9 +296,73 @@
       </div>
 
       <div class="mb-3">
+        <label for="rentalPrice" class="form-label">Rental Price</label>
+        <input type="text" id="rentalPrice" name="rentalPrice" class="form-control" value="<%= vehicle.getRentalPrice() %>" readonly>
+      </div>
+
+      <!-- Ask if they have a discount -->
+      <div class="mb-3">
+        <label for="discountCheckbox" class="form-label">Do you have a discount code?</label>
+        <input type="checkbox" id="discountCheckbox" name="discountCheckbox" onclick="toggleCouponInput()">
+      </div>
+
+      <!-- Coupon code section, initially hidden -->
+      <div class="mb-3" id="couponSection" style="display: none;">
+        <label for="couponCode" class="form-label">Enter Coupon Code</label>
+        <input type="text" id="couponCode" name="couponCode" class="form-control">
+        <button type="button" onclick="calculateBill()">Apply Coupon</button><br>
+        <div id="discountAmount"></div>
+        <div id="finalAmount"></div>
+      </div>
+
+      <!-- Submit button -->
+      <div class="mb-3">
+        <input type="submit" value="Book Now">
         <button type="submit" class="btn btn-primary w-100">Submit Booking</button>
       </div>
     </form>
+
+    <script>
+      // Toggle the coupon code section
+      function toggleCouponInput() {
+        var discountCheckbox = document.getElementById("discountCheckbox");
+        var couponSection = document.getElementById("couponSection");
+
+        if (discountCheckbox.checked) {
+          couponSection.style.display = "block";
+        } else {
+          couponSection.style.display = "none";
+          document.getElementById("discountAmount").innerHTML = "";
+          document.getElementById("finalAmount").innerHTML = "";
+        }
+      }
+
+      // // Calculate the bill with discount
+      // function calculateBill() {
+      //   var rentalPrice = parseFloat(document.getElementById("rentalPrice").value);
+      //   var couponCode = document.getElementById("couponCode").value.trim();
+      //
+      //   if (!isNaN(rentalPrice) && couponCode !== "") {
+      //     var xhr = new XMLHttpRequest();
+      //     xhr.open("GET", "applyCoupon.jsp?coupon=" + encodeURIComponent(couponCode), true);
+      //     xhr.onreadystatechange = function () {
+      //       if (xhr.readyState === 4 && xhr.status === 200) {
+      //         var discount = parseFloat(xhr.responseText);
+      //         if (isNaN(discount)) {
+      //           discount = 0;
+      //         }
+      //         var discountAmount = (rentalPrice * discount) / 100;
+      //         var finalAmount = rentalPrice - discountAmount;
+      //
+      //         document.getElementById("discountAmount").innerHTML = "Discount: " + discountAmount.toFixed(2) + " LKR";
+      //         document.getElementById("finalAmount").innerHTML = "Final Price: " + finalAmount.toFixed(2) + " LKR";
+      //       }
+      //     };
+      //     xhr.send();
+      //   }
+      // }
+    </script>
+
   </div>
 </div>
 

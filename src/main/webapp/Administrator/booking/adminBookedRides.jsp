@@ -72,7 +72,12 @@
             <td><%= currentStatus %></td>
             <td>
                 <!-- Actions for Edit and Delete -->
+            <td>
+                <!-- Actions for Assign and Delete -->
                 <a href="assignVehicle.jsp?vehicleId=<%= booking.getVehicleId() %>" class="btn btn-success btn-sm">Assign</a>
+                <a href="deleteBooking.jsp?bookingId=<%= booking.getBookingId() %>" class="btn btn-danger btn-sm" onclick="return confirm('So you have assigned a new driver for this booking. Are you sure you want to delete this booking?');">Delete</a>
+            </td>
+
             </td>
         </tr>
         <%
@@ -86,7 +91,7 @@
         </tbody>
     </table>
 
-    <a href="adminDashboard.jsp" class="btn btn-primary mt-3">Back to Dashboard</a>
+    <a href="manage_booking_vehicle.jsp" class="btn btn-primary mt-3">Back to Dashboard</a>
     <a href="logout.jsp" class="btn btn-danger mt-3">Logout</a>
 </div>
 

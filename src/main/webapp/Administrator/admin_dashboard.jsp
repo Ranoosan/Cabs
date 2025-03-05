@@ -89,7 +89,10 @@
 
     <a href="${pageContext.request.contextPath}/Administrator/booking/manage_booking_vehicle.jsp" class="btn btn-custom m-2">Manage   Bookings</a>
 
-    <a href="${pageContext.request.contextPath}/Administrator/booking/adminBookedRides.jsp" class="btn btn-custom m-2">Manage   Bookings</a>
+    <a href="${pageContext.request.contextPath}/Administrator/booking/adminBookedRides.jsp" class="btn btn-custom m-2">Manage Rejections</a>
+
+    <a href="${pageContext.request.contextPath}/Administrator/coupon/manage_coupon.jsp" class="btn btn-custom m-2">Manage Discounts</a>
+
 </div>
 
 <!-- Bootstrap JS -->

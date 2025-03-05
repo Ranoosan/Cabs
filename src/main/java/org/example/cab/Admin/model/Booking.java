@@ -18,8 +18,19 @@ public class Booking {
     private Timestamp createdAt; // Change Date to Timestamp
     private String status; // Added for status
     private Timestamp updatedAt; // Added for updatedAt
-
+    private double discountAmount;
+    private double finalAmount;
     // Getters and Setters
+
+    public double getDiscountAmount() {
+        return discountAmount;
+    }
+
+    public void setDiscountAmount(double discountAmount) {
+        this.discountAmount = discountAmount;
+    }
+    public double getFinalAmount() {return finalAmount;}
+    public void setFinalAmount(double finalAmount) {this.finalAmount = finalAmount;}
 
     public int getBookingId() {
         return bookingId;
