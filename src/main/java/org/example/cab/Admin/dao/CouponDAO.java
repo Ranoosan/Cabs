@@ -93,4 +93,30 @@ public class CouponDAO {
             return false;
         }
     }
+
+    public Coupon getCouponById(int couponId) {
+        Coupon coupon = null;
+        String query = "SELECT * FROM coupons WHERE id = ?";
+
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/cabs", "root", "");
+             PreparedStatement ps = connection.prepareStatement(query)) {
+
+            ps.setInt(1, couponId);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                coupon = new Coupon();
+                coupon.setId(rs.getInt("id"));
+                coupon.setCode(rs.getString("code"));
+                coupon.setDiscount(rs.getDouble("discount"));
+                coupon.setExpirationDate(rs.getDate("expiration_date"));
+                coupon.setActive(rs.getBoolean("is_active"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return coupon;
+    }
+
 }

@@ -5,7 +5,7 @@
   CouponDAO couponDAO = new CouponDAO();
   boolean success = couponDAO.deleteCoupon(couponId);
   if (success) {
-    response.sendRedirect("coupon_management.jsp");
+    response.sendRedirect("manage_coupon.jsp");
   } else {
     out.println("Failed to delete coupon.");
   }

@@ -25,7 +25,7 @@
     boolean success = couponDAO.createCoupon(coupon);
 
     if (success) {
-        response.sendRedirect("coupon_management.jsp");
+        response.sendRedirect("manage_coupon.jsp");
     } else {
         out.println("Failed to create coupon.");
     }
