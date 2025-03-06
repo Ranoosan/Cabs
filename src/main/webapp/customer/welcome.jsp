@@ -124,8 +124,8 @@
 
         <div class="card">
             <h3>Profile</h3>
-            <p>Manage your account and settings.</p>
-            <a href="profile.jsp" class="btn">View Profile</a>
+            <p>Manage your Bookings.</p>
+            <a href="user_bookings.jsp" class="btn">View Profile</a>
         </div>
     </div>
 </div>
