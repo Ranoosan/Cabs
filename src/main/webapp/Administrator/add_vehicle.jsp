@@ -138,6 +138,142 @@
         </form>
     </div>
 </div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const form = document.querySelector("form");
+        const vehicleModel = document.getElementById("vehicle_model_name");
+        const vehicleNumber = document.getElementById("vehicle_number");
+        const cc = document.getElementById("cc");
+        const engineNo = document.getElementById("engine_no");
+        const seatCapacity = document.getElementById("seat_capacity");
+        const rentalPrice = document.getElementById("rental_price");
+        const vehiclePhoto = document.getElementById("vehicle_photo");
+
+        function showError(input, message) {
+            input.classList.add("is-invalid");
+            if (!input.nextElementSibling || !input.nextElementSibling.classList.contains("invalid-feedback")) {
+                const errorDiv = document.createElement("div");
+                errorDiv.className = "invalid-feedback";
+                errorDiv.innerText = message;
+                input.parentNode.appendChild(errorDiv);
+            } else {
+                input.nextElementSibling.innerText = message;
+            }
+        }
+
+        function clearError(input) {
+            input.classList.remove("is-invalid");
+            if (input.nextElementSibling && input.nextElementSibling.classList.contains("invalid-feedback")) {
+                input.nextElementSibling.remove();
+            }
+        }
+
+        function validateField(input, regex, message) {
+            if (!regex.test(input.value.trim())) {
+                showError(input, message);
+                return false;
+            } else {
+                clearError(input);
+                return true;
+            }
+        }
+
+        function validateNotEmpty(input, message) {
+            if (input.value.trim() === "") {
+                showError(input, message);
+                return false;
+            } else {
+                clearError(input);
+                return true;
+            }
+        }
+
+        vehicleNumber.addEventListener("input", function () {
+            validateField(vehicleNumber, /^[A-Z]{2,3}-\d{4}$/i, "Invalid vehicle number format (e.g., ABC-1234)");
+        });
+
+        cc.addEventListener("input", function () {
+            validateField(cc, /^[0-9]+$/, "CC must be a numeric value");
+        });
+
+        seatCapacity.addEventListener("input", function () {
+            validateField(seatCapacity, /^[1-9][0-9]*$/, "Seat capacity must be a positive number");
+        });
+
+        rentalPrice.addEventListener("input", function () {
+            validateField(rentalPrice, /^[1-9][0-9]*$/, "Rental price must be a valid amount");
+        });
+
+        vehiclePhoto.addEventListener("change", function () {
+            const file = vehiclePhoto.files[0];
+            if (file) {
+                const fileType = file.type;
+                if (!fileType.startsWith("image/")) {
+                    showError(vehiclePhoto, "Please upload a valid image file");
+                    vehiclePhoto.value = "";
+                } else {
+                    clearError(vehiclePhoto);
+                }
+            }
+        });
+
+        form.addEventListener("submit", function (e) {
+            let isValid = true;
+
+            isValid &= validateNotEmpty(vehicleModel, "Vehicle model name is required");
+            isValid &= validateField(vehicleNumber, /^[A-Z]{2,3}-\d{4}$/i, "Invalid vehicle number format");
+            isValid &= validateField(cc, /^[0-9]+$/, "CC must be numeric");
+            isValid &= validateField(seatCapacity, /^[1-9][0-9]*$/, "Seat capacity must be positive");
+            isValid &= validateField(rentalPrice, /^[1-9][0-9]*$/, "Rental price must be valid");
+
+            if (!isValid) {
+                e.preventDefault();
+            }
+        });
+    });
+
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const category = document.getElementById("category");
+        const seatCapacity = document.getElementById("seat_capacity");
+
+        function validateSeatCapacity() {
+            let selectedCategory = category.value;
+            let seatValue = parseInt(seatCapacity.value, 10);
+            let min = 0, max = 0, message = "";
+
+            switch (selectedCategory) {
+                case "Car":
+                    min = 4; max = 8; message = "Car seat capacity must be between 4 and 8.";
+                    break;
+                case "Van":
+                    min = 6; max = 12; message = "Van seat capacity must be between 6 and 12.";
+                    break;
+                case "Auto":
+                    min = 3; max = 5; message = "Auto seat capacity must be between 3 and 5.";
+                    break;
+                case "Bike":
+                    min = 2; max = 3; message = "Bike seat capacity must be 2 or 3.";
+                    break;
+                default:
+                    return;
+            }
+
+            if (seatValue < min || seatValue > max || isNaN(seatValue)) {
+                seatCapacity.setCustomValidity(message);
+                seatCapacity.reportValidity(); // Show validation message
+            } else {
+                seatCapacity.setCustomValidity("");
+            }
+        }
+
+        // Event Listeners
+        category.addEventListener("change", validateSeatCapacity);
+        seatCapacity.addEventListener("input", validateSeatCapacity);
+    });
+</script>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

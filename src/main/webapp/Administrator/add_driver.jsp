@@ -127,7 +127,7 @@
                 <option value="Van">Van</option>
                 <option value="Bike">Bike</option>
                 <option value="Auto">Auto</option>
-                <option value="All">All</option>
+
             </select>
         </div>
 
