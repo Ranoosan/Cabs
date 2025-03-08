@@ -84,10 +84,10 @@ public class AddDriverController extends HttpServlet {
         boolean success = driverDAO.addDriver(driver);
 
         if (success) {
-            response.sendRedirect("/Administrator/success_page.jsp");
+            response.sendRedirect("/Administrator/admin_dashboard.jsp");
         } else {
             request.setAttribute("errorMessage", "Failed to add driver.");
-            request.getRequestDispatcher("error_page.jsp").forward(request, response);
+            request.getRequestDispatcher("/Administrator/admin_dashboard.jsp").forward(request, response);
         }
     }
 

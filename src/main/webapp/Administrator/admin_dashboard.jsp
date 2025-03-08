@@ -1,11 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="jakarta.servlet.http.HttpSession" %>
-<%@ page import="org.example.cab.Driver.model.User" %>
 
 <%
     HttpSession session1 = request.getSession(false);
     if (session1 == null || session1.getAttribute("admin") == null) {
-        response.sendRedirect("/Administrator/login.jsp"); // Redirect to login page if session is null
+        response.sendRedirect(request.getContextPath() + "/Administrator/login.jsp"); // Redirect to login if session is null
     }
 %>
 
@@ -16,20 +15,62 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
 
-    <!-- Bootstrap CSS -->
+    <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
         body {
             background-color: #2C3E50; /* Dark blue background */
-            color: #ECF0F1; /* Light gray text */
+            color: #ECF0F1;
         }
-        .container {
-            margin-top: 50px;
-            border: 1px solid #34495E;
-            border-radius: 10px;
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            position: fixed;
+            background: #1A252F;
+            padding-top: 20px;
+        }
+        .sidebar a {
+            display: block;
+            color: #ECF0F1;
+            padding: 12px;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+        .sidebar a:hover {
+            background: #3498DB;
+            color: white;
+        }
+        .content {
+            margin-left: 250px;
             padding: 20px;
-            background-color: #34495E;
+        }
+        .navbar {
+            background-color: #1A252F;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .navbar a {
+            color: #ECF0F1;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .navbar a:hover {
+            color: #3498DB;
+        }
+        .card {
+            background: #34495E;
+            border: none;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            margin: 10px 0;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
         }
         .btn-custom {
             background-color: #3498DB;
@@ -40,63 +81,77 @@
         }
         .btn-custom:hover {
             background-color: #2980B9;
-            color: #FFFFFF;
-        }
-        .navbar {
-            background-color: #1A252F;
-            padding: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .navbar a {
-            color: #ECF0F1;
-            font-weight: bold;
-            margin-right: 20px;
-            text-decoration: none;
-        }
-        .navbar a:hover {
-            color: #3498DB;
         }
     </style>
 </head>
 <body>
 
-<!-- Navigation Bar -->
-<nav class="navbar">
-    <div>
-        <a href="${pageContext.request.contextPath}/Administrator/admin_dashboard.jsp">Admin Dashboard</a>
-    </div>
-    <div>
+<!-- Sidebar Navigation -->
+<div class="sidebar">
+    <h4 class="text-center">Admin Panel</h4>
+    <a href="${pageContext.request.contextPath}/Administrator/admin_dashboard.jsp"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+    <a href="${pageContext.request.contextPath}/Administrator/view_drivers.jsp"><i class="fas fa-user"></i> View Drivers</a>
+    <a href="${pageContext.request.contextPath}/Administrator/add_driver.jsp"><i class="fas fa-user-plus"></i> Add Driver</a>
+    <a href="${pageContext.request.contextPath}/Administrator/view_vehicles.jsp"><i class="fas fa-car"></i> View Vehicles</a>
+    <a href="${pageContext.request.contextPath}/Administrator/add_vehicle.jsp"><i class="fas fa-plus"></i> Add Vehicle</a>
+    <a href="${pageContext.request.contextPath}/Administrator/assign_vehicle.jsp"><i class="fas fa-random"></i> Assign Vehicles</a>
+    <a href="${pageContext.request.contextPath}/Administrator/booking/manage_booking_vehicle.jsp"><i class="fas fa-calendar-check"></i> Manage Bookings</a>
+    <a href="${pageContext.request.contextPath}/Administrator/booking/adminBookedRides.jsp"><i class="fas fa-ban"></i> Manage Rejections</a>
+    <a href="${pageContext.request.contextPath}/Administrator/coupon/manage_coupon.jsp"><i class="fas fa-tags"></i> Manage Discounts</a>
+    <a href="${pageContext.request.contextPath}/Administrator/login.jsp" class="text-danger"><i class="fas fa-sign-out-alt"></i> Logout</a>
+</div>
+
+<!-- Main Content -->
+<div class="content">
+
+    <!-- Top Navbar -->
+    <div class="navbar">
+        <h3>Admin Dashboard</h3>
         <% if (session1 != null && session1.getAttribute("admin") != null) { %>
         <a href="${pageContext.request.contextPath}/Administrator/login.jsp" class="btn btn-danger btn-sm">Logout</a>
         <% } %>
     </div>
-</nav>
 
-<div class="container text-center">
-    <h2>Welcome, Admin!</h2>
-    <p>Manage driver accounts</p>
-    <a href="${pageContext.request.contextPath}/Administrator/view_drivers.jsp" class="btn btn-custom m-2">View All Drivers</a>
+    <!-- Dashboard Cards -->
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card">
+                    <i class="fas fa-users fa-2x"></i>
+                    <h5 class="mt-2">Total Drivers</h5>
+                    <h3>120</h3>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <i class="fas fa-car fa-2x"></i>
+                    <h5 class="mt-2">Total Vehicles</h5>
+                    <h3>45</h3>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <i class="fas fa-calendar-check fa-2x"></i>
+                    <h5 class="mt-2">Total Bookings</h5>
+                    <h3>350</h3>
+                </div>
+            </div>
+        </div>
 
-    <a href="${pageContext.request.contextPath}/Administrator/add_driver.jsp" class="btn btn-custom m-2">Add New Driver</a>
+        <!-- Admin Actions -->
+        <div class="text-center mt-4">
+            <a href="${pageContext.request.contextPath}/Administrator/view_drivers.jsp" class="btn btn-custom m-2"><i class="fas fa-eye"></i> View Drivers</a>
+            <a href="${pageContext.request.contextPath}/Administrator/add_driver.jsp" class="btn btn-custom m-2"><i class="fas fa-user-plus"></i> Add Driver</a>
+            <a href="${pageContext.request.contextPath}/Administrator/view_vehicles.jsp" class="btn btn-custom m-2"><i class="fas fa-car"></i> View Vehicles</a>
+            <a href="${pageContext.request.contextPath}/Administrator/add_vehicle.jsp" class="btn btn-custom m-2"><i class="fas fa-plus"></i> Add Vehicle</a>
+            <a href="${pageContext.request.contextPath}/Administrator/assign_vehicle.jsp" class="btn btn-custom m-2"><i class="fas fa-random"></i> Assign Vehicles</a>
+            <a href="${pageContext.request.contextPath}/Administrator/booking/manage_booking_vehicle.jsp" class="btn btn-custom m-2"><i class="fas fa-calendar-check"></i> Manage Bookings</a>
+            <a href="${pageContext.request.contextPath}/Administrator/booking/adminBookedRides.jsp" class="btn btn-custom m-2"><i class="fas fa-ban"></i> Manage Rejections</a>
+            <a href="${pageContext.request.contextPath}/Administrator/coupon/manage_coupon.jsp" class="btn btn-custom m-2"><i class="fas fa-tags"></i> Manage Discounts</a>
+        </div>
 
-    <a href="${pageContext.request.contextPath}/Administrator/view_vehicles.jsp" class="btn btn-custom m-2">view Vehicles</a>
-
-    <a href="${pageContext.request.contextPath}/Administrator/add_vehicle.jsp" class="btn btn-custom m-2">add  Vehicles</a>
-
-    <a href="${pageContext.request.contextPath}/Administrator/assign_vehicle.jsp" class="btn btn-custom m-2">assign  Vehicles</a>
-
-    <a href="${pageContext.request.contextPath}/Administrator/booking/manage_booking_vehicle.jsp" class="btn btn-custom m-2">Manage   Bookings</a>
-
-    <a href="${pageContext.request.contextPath}/Administrator/booking/adminBookedRides.jsp" class="btn btn-custom m-2">Manage Rejections</a>
-
-    <a href="${pageContext.request.contextPath}/Administrator/coupon/manage_coupon.jsp" class="btn btn-custom m-2">Manage Discounts</a>
-
+    </div>
 </div>
-
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>

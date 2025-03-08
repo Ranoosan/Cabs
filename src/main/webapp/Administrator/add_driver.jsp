@@ -12,6 +12,8 @@
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
         body {
@@ -24,6 +26,24 @@
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(255, 255, 255, 0.1);
+        }
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            position: fixed;
+            background: #1A252F;
+            padding-top: 20px;
+        }
+        .sidebar a {
+            display: block;
+            color: #ECF0F1;
+            padding: 12px;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+        .sidebar a:hover {
+            background: #3498DB;
+            color: white;
         }
         .btn-custom {
             background-color: #3498DB; /* Blue button */
@@ -50,6 +70,20 @@
     </style>
 </head>
 <body>
+
+<div class="sidebar">
+    <h4 class="text-center">Admin Panel</h4>
+    <a href="${pageContext.request.contextPath}/Administrator/admin_dashboard.jsp"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+    <a href="${pageContext.request.contextPath}/Administrator/view_drivers.jsp"><i class="fas fa-user"></i> View Drivers</a>
+    <a href="${pageContext.request.contextPath}/Administrator/add_driver.jsp"><i class="fas fa-user-plus"></i> Add Driver</a>
+    <a href="${pageContext.request.contextPath}/Administrator/view_vehicles.jsp"><i class="fas fa-car"></i> View Vehicles</a>
+    <a href="${pageContext.request.contextPath}/Administrator/add_vehicle.jsp"><i class="fas fa-plus"></i> Add Vehicle</a>
+    <a href="${pageContext.request.contextPath}/Administrator/assign_vehicle.jsp"><i class="fas fa-random"></i> Assign Vehicles</a>
+    <a href="${pageContext.request.contextPath}/Administrator/booking/manage_booking_vehicle.jsp"><i class="fas fa-calendar-check"></i> Manage Bookings</a>
+    <a href="${pageContext.request.contextPath}/Administrator/booking/adminBookedRides.jsp"><i class="fas fa-ban"></i> Manage Rejections</a>
+    <a href="${pageContext.request.contextPath}/Administrator/coupon/manage_coupon.jsp"><i class="fas fa-tags"></i> Manage Discounts</a>
+    <a href="${pageContext.request.contextPath}/Administrator/login.jsp" class="text-danger"><i class="fas fa-sign-out-alt"></i> Logout</a>
+</div>
 
 <div class="container">
     <h2>Add New Driver</h2>
@@ -129,6 +163,140 @@
         <a href="${pageContext.request.contextPath}/Administrator/admin_dashboard.jsp" class="btn btn-back w-100 mt-3">Back to Home</a>
     </form>
 </div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const form = document.querySelector("form");
+
+        function validateUsername() {
+            const username = document.getElementById("username");
+            const regex = /^\S{4,}$/; // No spaces, at least 4 chars
+            return showValidation(username, regex.test(username.value), "Username must be at least 4 characters long with no spaces.");
+        }
+
+        function validatePassword() {
+            const password = document.getElementById("password");
+            const regex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
+            return showValidation(password, regex.test(password.value), "Password must be at least 6 chars with an uppercase, a number, and a special character.");
+        }
+
+        function validateFullName() {
+            const fullName = document.getElementById("full_Name");
+            const regex = /^[A-Za-z\s]+$/;
+            return showValidation(fullName, regex.test(fullName.value), "Full name must contain only letters and spaces.");
+        }
+
+        function validateContactNumber() {
+            const contactNumber = document.getElementById("contact_Number");
+            const regex = /^\d{10}$/;
+            return showValidation(contactNumber, regex.test(contactNumber.value), "Contact number must be exactly 10 digits.");
+        }
+
+        function validateEmail() {
+            const email = document.getElementById("email_Address");
+            const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return showValidation(email, regex.test(email.value), "Enter a valid email address.");
+        }
+
+        function validateResidentialAddress() {
+            const address = document.getElementById("residential_Address");
+            return showValidation(address, address.value.length >= 5, "Address must be at least 5 characters long.");
+        }
+
+        function validateVehicleType() {
+            const vehicleType = document.getElementById("vehicleType");
+            return showValidation(vehicleType, vehicleType.value !== "", "Please select a vehicle type.");
+        }
+
+        function validateLicenseType() {
+            const licenseType = document.getElementById("license_Type");
+            return showValidation(licenseType, licenseType.value !== "", "Please select a license type.");
+        }
+
+        function validateExpirationDate() {
+            const expirationDate = document.getElementById("expiration_Date");
+            const selectedDate = new Date(expirationDate.value);
+            const today = new Date();
+            return showValidation(expirationDate, selectedDate > today, "Expiration date cannot be in the past.");
+        }
+
+        function validateBankAccount() {
+            const bankAccount = document.getElementById("bank_Account_Number");
+            const regex = /^\d{8,12}$/; // Allows 8 to 12 digits
+            return showValidation(bankAccount, regex.test(bankAccount.value), "Bank account number must be between 8 and 12 digits.");
+        }
+
+        function validateFileInput(id, message) {
+            const fileInput = document.getElementById(id);
+            return showValidation(fileInput, fileInput.files.length > 0, message);
+        }
+
+        function validateEmergencyContact() {
+            const emergencyContact = document.getElementById("emergency_Contact_Details");
+            const regex = /^\d{10}$/;
+            return showValidation(emergencyContact, regex.test(emergencyContact.value), "Emergency contact must be exactly 10 digits.");
+        }
+
+        function validateTermsAccepted() {
+            const terms = document.getElementById("terms_Accepted");
+            return showValidation(terms, terms.checked, "You must accept the terms and conditions.");
+        }
+
+        function showValidation(input, isValid, message) {
+            const errorSpan = input.nextElementSibling;
+            if (!errorSpan || !errorSpan.classList.contains("error-message")) {
+                const newSpan = document.createElement("span");
+                newSpan.classList.add("error-message");
+                newSpan.style.color = "red";
+                newSpan.style.fontSize = "12px";
+                input.parentElement.appendChild(newSpan);
+            }
+            input.nextElementSibling.textContent = isValid ? "" : message;
+            return isValid;
+        }
+
+        form.addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            const isValidForm =
+                validateUsername() &&
+                validatePassword() &&
+                validateFullName() &&
+                validateContactNumber() &&
+                validateEmail() &&
+                validateResidentialAddress() &&
+                validateVehicleType() &&
+                validateLicenseType() &&
+                validateExpirationDate() &&
+                validateBankAccount() &&
+                validateFileInput("medical_Certificate", "Upload your medical certificate.") &&
+                validateEmergencyContact() &&
+                validateFileInput("copy_Of_Driving_License", "Upload a copy of your driving license.") &&
+                validateFileInput("proof_Of_Address", "Upload proof of address.") &&
+                validateTermsAccepted();
+
+            if (isValidForm) {
+                form.submit();
+            }
+        });
+
+        document.getElementById("username").addEventListener("input", validateUsername);
+        document.getElementById("password").addEventListener("input", validatePassword);
+        document.getElementById("full_Name").addEventListener("input", validateFullName);
+        document.getElementById("contact_Number").addEventListener("input", validateContactNumber);
+        document.getElementById("email_Address").addEventListener("input", validateEmail);
+        document.getElementById("residential_Address").addEventListener("input", validateResidentialAddress);
+        document.getElementById("vehicleType").addEventListener("change", validateVehicleType);
+        document.getElementById("license_Type").addEventListener("change", validateLicenseType);
+        document.getElementById("expiration_Date").addEventListener("change", validateExpirationDate);
+        document.getElementById("bank_Account_Number").addEventListener("input", validateBankAccount);
+        document.getElementById("medical_Certificate").addEventListener("change", () => validateFileInput("medical_Certificate", "Upload your medical certificate."));
+        document.getElementById("emergency_Contact_Details").addEventListener("input", validateEmergencyContact);
+        document.getElementById("copy_Of_Driving_License").addEventListener("change", () => validateFileInput("copy_Of_Driving_License", "Upload a copy of your driving license."));
+        document.getElementById("proof_Of_Address").addEventListener("change", () => validateFileInput("proof_Of_Address", "Upload proof of address."));
+        document.getElementById("terms_Accepted").addEventListener("change", validateTermsAccepted);
+    });
+</script>
+
 
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

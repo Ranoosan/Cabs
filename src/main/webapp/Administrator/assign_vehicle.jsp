@@ -33,7 +33,6 @@
   }
 %>
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -41,14 +40,70 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Assign Vehicle</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    body { background-color: #F8F9FA; color: #343A40; }
-    .vehicle-container { display: flex; flex-wrap: wrap; justify-content: center; margin: 50px 0; }
-    .vehicle-card { flex: 0 0 30%; margin: 20px; padding: 15px; border: 1px solid #ddd; border-radius: 8px; background: #fff; box-shadow: 2px 2px 10px rgba(0,0,0,0.1); }
-    .vehicle-image { width: 100%; height: auto; border-radius: 5px; }
+    body {
+      background-color: #2C3E50; /* Dark blue background */
+      color: #000000; /* Black text for better contrast */
+    }
+    .vehicle-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      padding: 20px;
+      justify-content: center;
+      max-width: 100%;
+      overflow-y: auto;
+      max-height: 80vh;
+    }
+    .vehicle-card {
+      flex: 0 0 calc(50% - 20px);
+      padding: 15px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background: #fff;
+      box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    .vehicle-image {
+      width: 100%;
+      height: auto;
+      border-radius: 5px;
+    }
+    .vehicle-container::-webkit-scrollbar {
+      width: 8px;
+    }
+    .vehicle-container::-webkit-scrollbar-thumb {
+      background: #007bff;
+      border-radius: 4px;
+    }
+    .vehicle-container::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+    .back-to-dashboard {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
+      transition: background-color 0.3s ease;
+    }
+
+    .back-to-dashboard:hover {
+      background-color: #0056b3;
+    }
   </style>
+
 </head>
 <body>
+<button class="back-to-dashboard" onclick="window.location.href='admin_dashboard.jsp'">Back to Dashboard</button>
 
 <h2 class="text-center mt-4">Assign Driver to Vehicles</h2>
 <div class="vehicle-container">
@@ -58,12 +113,9 @@
     <h5 class="mt-2">Model: <%= vehicle.getCategory() %></h5>
     <p><strong>Number:</strong> <%= vehicle.getVehicleNumber() %><br>
       <strong>Driver:</strong> <%= vehicle.getDriverName() != null ? vehicle.getDriverName() : "" %><br>
-
-      <%=
-      vehicle.getDriverId() != 0 ?
+      <%= vehicle.getDriverId() != 0 ?
               driverDAO.getAllDrivers().stream().filter(d -> d.getId() == vehicle.getDriverId()).findFirst().get().getFullName()
-              : "Not Assigned"
-      %>
+              : "Not Assigned" %>
     </p>
     <form method="post">
       <input type="hidden" name="vehicleId" value="<%= vehicle.getId() %>">
@@ -71,7 +123,6 @@
       <select name="driverId" class="form-select" required>
         <option value="">Select Driver</option>
         <%
-          // Fetch drivers based on vehicle category
           List<Driver> filteredDrivers = driverDAO.getDriversByVehicleCategory(vehicle.getCategory());
           for (Driver driver : filteredDrivers) {
         %>
