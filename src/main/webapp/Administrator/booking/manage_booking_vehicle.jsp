@@ -12,27 +12,34 @@
 </head>
 <style>
     body {
-        background-color: #2C3E50; /* Dark blue background */
-        color: #ECF0F1; /* Light gray text */
+        background-color: #f8f9fa; /* Light grey background */
+        color: #333333; /* Dark grey text color */
+
     }
     .sidebar {
         width: 250px;
         height: 100vh;
         position: fixed;
-        background: #1A252F;
+        background: linear-gradient(180deg, #d3d3d3, #b0b0b0); /* Light to medium grey gradient */
         padding-top: 20px;
+        box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
     }
+
     .sidebar a {
         display: block;
-        color: #ECF0F1;
+        color: #333333; /* Dark grey text */
         padding: 12px;
         text-decoration: none;
-        transition: 0.3s;
+        font-weight: 500;
+        transition: all 0.3s ease-in-out;
     }
+
     .sidebar a:hover {
-        background: #3498DB;
-        color: white;
+        background: #bbbbbb; /* Slightly darker grey on hover */
+        color: #000000; /* Black text */
+        transform: scale(1.05);
     }
+
 
 </style>
 <body>
@@ -109,7 +116,8 @@
                         <option value="Cancelled" <%= rs.getString("status").equals("Cancelled") ? "selected" : "" %>>Cancelled</option>
                         <option value="Completed" <%= rs.getString("status").equals("Completed") ? "selected" : "" %>>Completed</option>
                     </select>
-                    <button type="submit" name="update_booking" class="btn btn-primary btn-sm mt-2">Update</button>
+                    <button type="submit" name="update_booking" class="btn btn-dark btn-sm mt-2">Update</button>
+
                 </form>
             </td>
         </tr>
@@ -176,7 +184,8 @@
                         <option value="Available" <%= rs.getString("status").equals("Available") ? "selected" : "" %>>Available</option>
                         <option value="Non-Available" <%= rs.getString("status").equals("Non-Available") ? "selected" : "" %>>Non-Available</option>
                     </select>
-                    <button type="submit" name="update_vehicle" class="btn btn-primary btn-sm mt-2">Update</button>
+                    <button type="submit" name="update_vehicle" class="btn btn-dark btn-sm mt-2">Update</button>
+
                 </form>
             </td>
         </tr>

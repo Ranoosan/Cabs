@@ -24,64 +24,90 @@
 
     <style>
         body {
-            background-color: #2C3E50; /* Dark blue background */
-            color: #ECF0F1;
+            background-color: #f8f9fa; /* Light grey background */
+            color: #333333; /* Dark grey text color */
         }
+
         .sidebar {
             width: 250px;
             height: 100vh;
             position: fixed;
-            background: #1A252F;
+            background: linear-gradient(180deg, #d3d3d3, #b0b0b0); /* Light to medium grey gradient */
             padding-top: 20px;
+            box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
         }
+
         .sidebar a {
             display: block;
-            color: #ECF0F1;
+            color: #333333; /* Dark grey text */
             padding: 12px;
             text-decoration: none;
-            transition: 0.3s;
+            font-weight: 500;
+            transition: all 0.3s ease-in-out;
         }
+
         .sidebar a:hover {
-            background: #3498DB;
-            color: white;
+            background: #bbbbbb; /* Slightly darker grey on hover */
+            color: #000000; /* Black text */
+            transform: scale(1.05);
         }
+
         .content {
             margin-left: 250px;
             padding: 20px;
         }
+
         .navbar {
-            background-color: #1A252F;
+            background: #e0e0e0; /* Soft grey navbar */
             padding: 15px;
             display: flex;
             justify-content: space-between;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
+
         .navbar a {
-            color: #ECF0F1;
+            color: #333333; /* Dark grey text */
             text-decoration: none;
             font-weight: bold;
+            transition: color 0.3s ease-in-out;
         }
+
         .navbar a:hover {
-            color: #3498DB;
+            color: #000000; /* Black on hover */
         }
+
         .card {
-            background: #34495E;
-            border: none;
-            color: white;
+            background: #ffffff; /* White card */
+            border: 1px solid #cccccc; /* Light grey border */
+            color: #333333; /* Dark grey text */
             text-align: center;
             padding: 15px;
             margin: 10px 0;
-            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+            box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            transition: transform 0.3s ease-in-out;
         }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 6px 6px 20px rgba(0, 0, 0, 0.2);
+        }
+
         .btn-custom {
-            background-color: #3498DB;
-            color: #FFFFFF;
+            background: #d3d3d3; /* Light grey button */
+            color: #333333; /* Dark grey text */
             font-weight: bold;
             border: none;
-            transition: 0.3s;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: all 0.3s ease-in-out;
         }
+
         .btn-custom:hover {
-            background-color: #2980B9;
+            background: #bbbbbb; /* Darker grey on hover */
+            transform: scale(1.05);
         }
+
     </style>
 </head>
 <body>

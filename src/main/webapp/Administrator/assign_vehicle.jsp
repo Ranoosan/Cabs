@@ -44,9 +44,10 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     body {
-      background-color: #2C3E50; /* Dark blue background */
-      color: #000000; /* Black text for better contrast */
+      background-color: #f8f9fa; /* Light grey background */
+      color: #000000; /* Black text */
     }
+
     .vehicle-container {
       display: flex;
       flex-wrap: wrap;
@@ -57,48 +58,75 @@
       overflow-y: auto;
       max-height: 80vh;
     }
+
     .vehicle-card {
       flex: 0 0 calc(50% - 20px);
       padding: 15px;
       border: 1px solid #ddd;
       border-radius: 8px;
-      background: #fff;
+      background: #ffffff; /* White background */
       box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
       text-align: center;
     }
+
     .vehicle-image {
       width: 100%;
       height: auto;
       border-radius: 5px;
     }
+
     .vehicle-container::-webkit-scrollbar {
       width: 8px;
     }
+
     .vehicle-container::-webkit-scrollbar-thumb {
-      background: #007bff;
+      background: #6c757d; /* Grey scrollbar */
       border-radius: 4px;
     }
+
     .vehicle-container::-webkit-scrollbar-track {
-      background: #f1f1f1;
+      background: #e9ecef;
     }
+
     .back-to-dashboard {
       position: absolute;
       top: 20px;
       right: 20px;
       padding: 10px 20px;
-      background-color: #007bff;
-      color: white;
+      background-color: #6c757d; /* Grey button */
+      color: #000000; /* Black text */
       font-size: 16px;
       border: none;
       border-radius: 5px;
       cursor: pointer;
-      box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
+      box-shadow: 0 4px 8px rgba(108, 117, 125, 0.3);
       transition: background-color 0.3s ease;
     }
 
     .back-to-dashboard:hover {
-      background-color: #0056b3;
+      background-color: #5a6268; /* Darker grey */
     }
+
+    h2 {
+      color: #000000; /* Black heading */
+    }
+
+    label {
+      font-weight: bold;
+      color: #000000; /* Black label text */
+    }
+
+    .form-select,
+    .btn-primary {
+      background-color: #6c757d; /* Grey dropdown and button */
+      color: #ffffff; /* White text */
+      border: none;
+    }
+
+    .btn-primary:hover {
+      background-color: #5a6268; /* Darker grey */
+    }
+
   </style>
 
 </head>

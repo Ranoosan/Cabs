@@ -16,33 +16,41 @@
 
     <style>
         body {
-            background-color: #2C3E50; /* Dark blue background */
-            color: #ECF0F1; /* Light gray text */
+            background-color: #f8f9fa; /* Light grey background */
+            color: #333333; /* Dark grey text color */
+
         }
         .container {
             margin-top: 50px;
-            background-color: #34495E; /* Slightly lighter background for the container */
+            background-color: #f8f9fa; /* Slightly lighter background for the container */
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(255, 255, 255, 0.1);
         }
+
+
         .sidebar {
             width: 250px;
             height: 100vh;
             position: fixed;
-            background: #1A252F;
+            background: linear-gradient(180deg, #d3d3d3, #b0b0b0); /* Light to medium grey gradient */
             padding-top: 20px;
+            box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
         }
+
         .sidebar a {
             display: block;
-            color: #ECF0F1;
+            color: #333333; /* Dark grey text */
             padding: 12px;
             text-decoration: none;
-            transition: 0.3s;
+            font-weight: 500;
+            transition: all 0.3s ease-in-out;
         }
+
         .sidebar a:hover {
-            background: #3498DB;
-            color: white;
+            background: #bbbbbb; /* Slightly darker grey on hover */
+            color: #000000; /* Black text */
+            transform: scale(1.05);
         }
 
     </style>

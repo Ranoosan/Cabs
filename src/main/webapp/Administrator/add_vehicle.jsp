@@ -10,8 +10,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body {
-            background-color: #2C3E50;
-            color: #ECF0F1;
+            background-color: #f8f9fa; /* Light grey background */
+            color: #333333; /* Dark grey text color */
+
         }
         .container {
             max-width: 1600px;
@@ -24,20 +25,41 @@
             width: 250px;
             height: 100vh;
             position: fixed;
-            background: #1A252F;
+            background: linear-gradient(180deg, #d3d3d3, #b0b0b0); /* Light to medium grey gradient */
             padding-top: 20px;
+            box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
         }
+
         .sidebar a {
             display: block;
-            color: #ECF0F1;
+            color: #333333; /* Dark grey text */
             padding: 12px;
             text-decoration: none;
-            transition: 0.3s;
+            font-weight: 500;
+            transition: all 0.3s ease-in-out;
         }
+
         .sidebar a:hover {
-            background: #3498DB;
-            color: white;
+            background: #bbbbbb; /* Slightly darker grey on hover */
+            color: #000000; /* Black text */
+            transform: scale(1.05);
         }
+        .btn-grey {
+            background-color: #6c757d; /* Grey background */
+            color: white; /* White text */
+            font-weight: bold;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            width: 100%; /* Full width */
+            transition: all 0.3s ease-in-out;
+        }
+
+        .btn-grey:hover {
+            background-color: #5a6268; /* Darker grey on hover */
+            transform: scale(1.05); /* Slight zoom effect */
+        }
+
     </style>
 </head>
 <body>
@@ -111,7 +133,8 @@
                 <label for="vehicle_photo" class="form-label">Vehicle Photo:</label>
                 <input type="file" class="form-control" id="vehicle_photo" name="vehicle_photo" accept="image/*" required>
             </div>
-            <button type="submit" class="btn btn-success w-100">Add Vehicle</button>
+            <button type="submit" class="btn btn-grey">Add Vehicle</button>
+
         </form>
     </div>
 </div>
