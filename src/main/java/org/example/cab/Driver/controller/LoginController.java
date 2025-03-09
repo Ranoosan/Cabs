@@ -25,7 +25,7 @@ public class LoginController extends HttpServlet {
             User driver = driverDAO.getDriverByUsername(username);
             if (driver != null) {
                 HttpSession session = request.getSession();
-                session.setAttribute("user", driver);
+                session.setAttribute("users", driver);
                 session.setAttribute("driverId", driver.getId()); // Store the entire User object in the session
 
                 // Redirect to dashboard inside the 'driver' folder

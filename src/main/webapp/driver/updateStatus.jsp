@@ -4,12 +4,12 @@
 
 <%
   HttpSession sessiono = request.getSession(false);
-  if (sessiono == null || sessiono.getAttribute("user") == null) {
+  if (sessiono == null || sessiono.getAttribute("users") == null) {
     response.sendRedirect("login.jsp");
     return;
   }
 
-  User driver = (User) sessiono.getAttribute("user");
+  User driver = (User) sessiono.getAttribute("users");
   String newStatus = request.getParameter("status");
 
   try {

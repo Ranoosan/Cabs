@@ -93,7 +93,7 @@
         <a href="#">About Us</a>
         <a href="#">Book a Ride</a>
         <a href="#">Ride History</a>
-        <a href="#">Profile</a>
+        <a href="profile.jsp">Profile</a>
         <a class="btn logout" href="<%= request.getContextPath() %>/customer/login.jsp">Logout</a>
     </div>
 </div>

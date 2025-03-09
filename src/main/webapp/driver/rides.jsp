@@ -36,12 +36,12 @@
 
 <%
     HttpSession sessiono = request.getSession(false);
-    if (sessiono == null || sessiono.getAttribute("user") == null) {
+    if (sessiono == null || sessiono.getAttribute("users") == null) {
         response.sendRedirect("login.jsp");
         return;
     }
 
-    User driver = (User) sessiono.getAttribute("user");
+    User driver = (User) sessiono.getAttribute("users");
     Connection connection = (Connection) application.getAttribute("DB_CONNECTION");
     BookingDao bookingDAO = new BookingDao();
     List<Booking> bookings = bookingDAO.getBookingsByDriverId(driver.getId());
