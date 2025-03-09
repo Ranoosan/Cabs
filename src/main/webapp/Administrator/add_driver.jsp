@@ -167,7 +167,7 @@
             <label for="terms_Accepted" class="form-check-label">I accept Mega City Cab’s Terms and Conditions</label>
         </div>
         <button type="submit" class="btn btn-custom w-100">Add Driver</button>
-        <a href="${pageContext.request.contextPath}/Administrator/admin_dashboard.jsp" class="btn btn-back w-100 mt-3">Back to Home</a>
+        <a href="${pageContext.request.contextPath}/admin_dashboard.jsp" class="btn btn-back w-100 mt-3">Back to Home</a>
     </form>
 </div>
 <script>

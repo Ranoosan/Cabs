@@ -67,11 +67,13 @@
         <tr>
             <th>Booking ID</th>
             <th>Username</th>
+            <th>Driver Name</th>
+            <th>Vehicle License</th>
             <th>Pickup Location</th>
             <th>Drop-Off Location</th>
             <th>Booking Date</th>
+            <th>Booking Date</th>
             <th>Status</th>
-
         </tr>
         </thead>
         <tbody>
@@ -97,14 +99,24 @@
                     out.println("<script>alert('Booking status updated successfully!');</script>");
                 }
 
-                // Fetch bookings
-                ps = con.prepareStatement("SELECT booking_id, username, pickup_location, drop_off_location, booking_date, status FROM bookings");
+                // Fetch bookings with driver name and vehicle license number
+                String query = "SELECT b.booking_id, b.username, d.fullName, v.vehicle_number, " +
+                        "b.pickup_location, b.drop_off_location, b.booking_date, b.status " +
+                        "FROM bookings b " +
+                        "LEFT JOIN driversss d ON b.driver_id = d.id " +
+                        "LEFT JOIN vehicle v ON b.vehicle_id = v.id " +
+                        "WHERE b.status IN ('Accepted', 'Completed','Pending')";
+
+                ps = con.prepareStatement(query);
                 rs = ps.executeQuery();
+
                 while (rs.next()) {
         %>
         <tr>
             <td><%= rs.getInt("booking_id") %></td>
             <td><%= rs.getString("username") %></td>
+            <td><%= rs.getString("fullName") != null ? rs.getString("fullName") : "Not Assigned" %></td>
+            <td><%= rs.getString("vehicle_number") != null ? rs.getString("vehicle_number") : "Not Assigned" %></td>
             <td><%= rs.getString("pickup_location") %></td>
             <td><%= rs.getString("drop_off_location") %></td>
             <td><%= rs.getDate("booking_date") %></td>
@@ -117,7 +129,6 @@
                         <option value="Completed" <%= rs.getString("status").equals("Completed") ? "selected" : "" %>>Completed</option>
                     </select>
                     <button type="submit" name="update_booking" class="btn btn-dark btn-sm mt-2">Update</button>
-
                 </form>
             </td>
         </tr>
@@ -129,6 +140,7 @@
         %>
         </tbody>
     </table>
+
 
     <!-- Vehicle Table -->
     <h4 class="mt-4">Vehicles</h4>
