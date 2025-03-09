@@ -17,8 +17,8 @@
     <!-- Custom Styles -->
     <style>
         body {
-            background-color: #f8f9fa; /* Light background */
-            color: #343a40; /* Dark text */
+            background-color: black;
+            color: white;
             font-family: 'Arial', sans-serif;
         }
         .vehicle-container {
@@ -28,49 +28,76 @@
             text-align: left;
         }
         .vehicle-card {
-            background-color: #ffffff; /* White background for cards */
+            background-color: black;
+            border: 2px solid yellow;
             border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-            margin-bottom: 20px; /* Space between cards */
-            padding: 20px; /* Padding inside cards */
+            box-shadow: 0 4px 10px rgba(255, 255, 0, 0.5);
+            margin-bottom: 20px;
+            padding: 20px;
         }
         .btn-custom {
-            background-color: #007bff;
-            color: white;
+            background-color: yellow;
+            color: black;
             font-weight: bold;
-            border: none;
+            border: 2px solid black;
             transition: 0.3s;
         }
         .btn-custom:hover {
-            background-color: #0056b3;
-            color: white;
+            background-color: black;
+            color: yellow;
+            border: 2px solid yellow;
         }
         .vehicle-photo {
-            width: 100px; /* Set a standard width for vehicle photos */
-            height: auto; /* Maintain aspect ratio */
-            border-radius: 5px; /* Optional: round the corners of the photo */
+            width: 100px;
+            height: auto;
+            border-radius: 5px;
+        }
+        .navbar {
+            background-color: black;
+            padding: 10px;
+        }
+        .navbar-brand {
+            font-weight: bold;
+            color: yellow !important;
+        }
+        .nav-link {
+            color: yellow !important;
+            transition: 0.3s;
+        }
+        .nav-link:hover {
+            color: white !important;
         }
     </style>
 </head>
 <body>
 
 <%
-    // Check if the user is logged in by checking the session
-    HttpSession sessiono = request.getSession(false); // Get session if it exists
+    HttpSession sessiono = request.getSession(false);
     if (sessiono == null || sessiono.getAttribute("user") == null) {
-        // If session doesn't exist or user is not logged in, redirect to login page
         response.sendRedirect("login.jsp");
         return;
     }
 
-    // Retrieve the User object from the session
     User driver = (User) sessiono.getAttribute("user");
-
-    // Create an instance of VehicleDAO
     VehicleDAO vehicleDAO = new VehicleDAO();
-    List<Vehicle> vehicles = vehicleDAO.getVehiclesByDriverId(driver.getId()); // Fetch vehicles using DAO
+    List<Vehicle> vehicles = vehicleDAO.getVehiclesByDriverId(driver.getId());
 %>
-
+<nav class="navbar navbar-expand-lg">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">Cab Services</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="dashboard.jsp">Dashboard</a></li>
+                <li class="nav-item"><a class="nav-link" href="myVehicles.jsp">My Vehicles</a></li>
+                <li class="nav-item"><a class="nav-link" href="rides.jsp">My Rides</a></li>
+                <li class="nav-item"><a class="nav-link" href="logout.jsp">Logout</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
 <div class="vehicle-container">
     <h2>My Vehicles</h2>
     <p>Welcome, <%= driver.getFullName() %>! Here are your registered vehicles:</p>

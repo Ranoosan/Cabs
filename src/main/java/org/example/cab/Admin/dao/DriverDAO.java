@@ -205,7 +205,7 @@ public class DriverDAO {
     // Get drivers by vehicle category
     public List<Driver> getDriversByVehicleCategory(String category) {
         List<Driver> drivers = new ArrayList<>();
-        String sql = "SELECT * FROM driversss WHERE vehicleType = ? ";  // Adjust column name if necessary
+        String sql = "SELECT * FROM driversss WHERE vehicleType = ? AND status = 'Free'";
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -238,6 +238,7 @@ public class DriverDAO {
         }
         return drivers;
     }
+
 
 
 }
