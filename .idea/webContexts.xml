@@ -6,6 +6,7 @@
         <entry key="file://$PROJECT_DIR$/src/main/webapp/Administrator/add_vehicle.jsp" value="file://$PROJECT_DIR$/src/main/webapp/Administrator" />
         <entry key="file://$PROJECT_DIR$/src/main/webapp/Administrator/assign_vehicle.jsp" value="file://$PROJECT_DIR$/src/main/webapp/Administrator" />
         <entry key="file://$PROJECT_DIR$/src/main/webapp/customer/booking.jsp" value="file://$PROJECT_DIR$/src/main/webapp/customer" />
+        <entry key="file://$PROJECT_DIR$/src/main/webapp/driver/myVehicles.jsp" value="file://$PROJECT_DIR$/src/main/webapp" />
       </map>
     </option>
   </component>

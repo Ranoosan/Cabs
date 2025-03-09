@@ -13,7 +13,7 @@
   <style>
     body {
       background-color: #121212; /* Dark background */
-      color: #FFD700; /* Gold text */
+      color: #28a745; /* Green text */
       display: flex;
       justify-content: center;
       align-items: center;
@@ -24,7 +24,7 @@
       background-color: #1E1E1E; /* Darker grey */
       padding: 30px;
       border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(255, 215, 0, 0.3); /* Yellow glow effect */
+      box-shadow: 0 4px 10px rgba(40, 167, 69, 0.3); /* Green glow effect */
       width: 100%;
       max-width: 400px;
       text-align: center;
@@ -34,24 +34,24 @@
     }
     .form-control {
       background-color: #333;
-      color: #FFD700;
-      border: 1px solid #FFD700;
+      color: #28a745;
+      border: 1px solid #28a745;
     }
     .form-control:focus {
       background-color: #222;
-      color: #FFD700;
-      border-color: #FFA500;
-      box-shadow: 0 0 10px rgba(255, 165, 0, 0.5);
+      color: #28a745;
+      border-color: #00b300;
+      box-shadow: 0 0 10px rgba(0, 179, 0, 0.5);
     }
     .btn-custom {
-      background-color: #FFD700;
+      background-color: #28a745;
       color: #121212;
       font-weight: bold;
       border: none;
       transition: 0.3s;
     }
     .btn-custom:hover {
-      background-color: #FFA500;
+      background-color: #00b300;
       color: black;
     }
     .error-message {

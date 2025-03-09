@@ -13,8 +13,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Booked Rides</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+    .navbar {
+        background-color: #1e1e1e; /* Dark navbar background */
+        padding: 10px;
+    }
+    .navbar-brand {
+        font-weight: bold;
+        color: #28a745 !important; /* Green text */
+    }
+    .nav-link {
+        color: #ffffff !important;
+        transition: 0.3s;
+    }
+    .nav-link:hover {
+        color: #28a745 !important; /* Green text on hover */
+    }
+</style>
 </head>
-<body>
+
+<body style="background-color: #121212; color: #28a745;">
 
 <%
     HttpSession sessiono = request.getSession(false);
@@ -28,6 +46,22 @@
     BookingDao bookingDAO = new BookingDao();
     List<Booking> bookings = bookingDAO.getBookingsByDriverId(driver.getId());
 %>
+<nav class="navbar navbar-expand-lg">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">Cab Services</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="dashboard.jsp">Dashboard</a></li>
+                <li class="nav-item"><a class="nav-link" href="myVehicles.jsp">My Vehicles</a></li>
+                <li class="nav-item"><a class="nav-link" href="rides.jsp">My Rides</a></li>
+                <li class="nav-item"><a class="nav-link" href="logout.jsp">Logout</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
 
 <div class="container mt-5">
     <h2 class="mb-4">My Booked Rides</h2>
@@ -45,7 +79,7 @@
         }
     %>
 
-    <table class="table table-striped">
+    <table class="table table-dark table-striped">
         <thead>
         <tr>
             <th>Booking ID</th>

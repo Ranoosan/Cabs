@@ -17,9 +17,9 @@
     <!-- Custom Styles -->
     <style>
         body {
-            background-color: black;
-            color: white;
-            font-family: 'Arial', sans-serif;
+            background-color: #121212; /* Dark background */
+            color: #ffffff;
+            font-family: 'Poppins', sans-serif;
         }
         .vehicle-container {
             padding: 30px;
@@ -28,44 +28,62 @@
             text-align: left;
         }
         .vehicle-card {
-            background-color: black;
-            border: 2px solid yellow;
+            background-color: #1e1e1e; /* Dark card background */
+            border: 2px solid #28a745; /* Green border */
             border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(255, 255, 0, 0.5);
+            box-shadow: 0 4px 10px rgba(40, 167, 69, 0.5); /* Green glowing effect */
             margin-bottom: 20px;
             padding: 20px;
+            transition: 0.3s ease-in-out;
+        }
+        .vehicle-card:hover {
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.8); /* More glowing effect on hover */
         }
         .btn-custom {
-            background-color: yellow;
-            color: black;
+            background-color: #28a745; /* Green background */
+            color: #121212; /* Dark text */
             font-weight: bold;
-            border: 2px solid black;
+            border: 2px solid #121212; /* Dark border */
             transition: 0.3s;
         }
         .btn-custom:hover {
-            background-color: black;
-            color: yellow;
-            border: 2px solid yellow;
+            background-color: #121212; /* Dark background on hover */
+            color: #28a745; /* Green text */
+            border: 2px solid #28a745; /* Green border */
         }
         .vehicle-photo {
-            width: 100px;
-            height: auto;
+            width: 600px;  /* Larger width */
+            height: auto;   /* Maintain aspect ratio */
             border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.3s ease; /* Smooth zoom effect */
+        }
+
+
+
+        .vehicle-details {
+            display: none; /* Initially hide the details */
+            margin-top: 20px;
         }
         .navbar {
-            background-color: black;
+            background-color: #1e1e1e; /* Dark navbar background */
             padding: 10px;
         }
         .navbar-brand {
             font-weight: bold;
-            color: yellow !important;
+            color: #28a745 !important; /* Green text */
         }
         .nav-link {
-            color: yellow !important;
+            color: #ffffff !important;
             transition: 0.3s;
         }
         .nav-link:hover {
-            color: white !important;
+            color: #28a745 !important; /* Green text on hover */
+        }
+        .alert-warning {
+            background-color: #333333; /* Dark background for alert */
+            color: #28a745; /* Green text */
+            border: 1px solid #28a745; /* Green border */
         }
     </style>
 </head>
@@ -104,22 +122,33 @@
 
     <% for (Vehicle vehicle : vehicles) { %>
     <div class="vehicle-card">
-        <h5>Vehicle ID: <%= vehicle.getId() %></h5>
+
         <p><strong>Category:</strong> <%= vehicle.getCategory() %></p>
-        <p><strong>Vehicle Number:</strong> <%= vehicle.getVehicleNumber() %></p>
-        <p><strong>Engine No:</strong> <%= vehicle.getEngineNo() %></p>
-        <p><strong>CC:</strong> <%= vehicle.getCc() %></p>
-        <p><strong>Fuel Type:</strong> <%= vehicle.getFuelType() %></p>
-        <p><strong>Seat Capacity:</strong> <%= vehicle.getSeatCapacity() %></p>
-        <p><strong>Rental Price (LKR):</strong> <%= vehicle.getRentalPrice() %></p>
-        <p><strong>Available:</strong> <%= vehicle.isAvailable() ? "Yes" : "No" %></p>
-        <p><strong>Vehicle Photo:</strong></p>
+<%--        <p><strong>Vehicle Number:</strong> <%= vehicle.getVehicleNumber() %></p>--%>
+<%--        <p><strong>Engine No:</strong> <%= vehicle.getEngineNo() %></p>--%>
+<%--        <p><strong>CC:</strong> <%= vehicle.getCc() %></p>--%>
+<%--        <p><strong>Fuel Type:</strong> <%= vehicle.getFuelType() %></p>--%>
+<%--        <p><strong>Seat Capacity:</strong> <%= vehicle.getSeatCapacity() %></p>--%>
+<%--        <p><strong>Rental Price (LKR):</strong> <%= vehicle.getRentalPrice() %></p>--%>
+<%--        <p><strong>Available:</strong> <%= vehicle.isAvailable() ? "Yes" : "No" %></p>--%>
+
+        <!-- Vehicle Image -->
+
         <div>
-            <% if (vehicle.getVehiclePhoto() != null && !vehicle.getVehiclePhoto().isEmpty()) { %>
-            <img src="<%= vehicle.getVehiclePhoto() %>" alt="Vehicle Photo" class="vehicle-photo">
-            <% } else { %>
-            No Photo
-            <% } %>
+            <img src="uploads/img.png" alt="Vehicle Photo" class="vehicle-photo" onclick="toggleDetails(<%= vehicle.getId() %>)">
+        </div>
+
+        <!-- Vehicle Details (Initially hidden) -->
+        <div id="details-<%= vehicle.getId() %>" class="vehicle-details">
+            <h5>Vehicle ID: <%= vehicle.getId() %></h5>
+            <p><strong>Category:</strong> <%= vehicle.getCategory() %></p>
+            <p><strong>Vehicle Number:</strong> <%= vehicle.getVehicleNumber() %></p>
+            <p><strong>Engine No:</strong> <%= vehicle.getEngineNo() %></p>
+            <p><strong>CC:</strong> <%= vehicle.getCc() %></p>
+            <p><strong>Fuel Type:</strong> <%= vehicle.getFuelType() %></p>
+            <p><strong>Seat Capacity:</strong> <%= vehicle.getSeatCapacity() %></p>
+            <p><strong>Rental Price (LKR):</strong> <%= vehicle.getRentalPrice() %></p>
+            <p><strong>Available:</strong> <%= vehicle.isAvailable() ? "Yes" : "No" %></p>
         </div>
     </div>
     <% } %>
@@ -136,6 +165,18 @@
 
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Custom JavaScript to toggle vehicle details -->
+<script>
+    function toggleDetails(vehicleId) {
+        var details = document.getElementById('details-' + vehicleId);
+        if (details.style.display === 'none' || details.style.display === '') {
+            details.style.display = 'block';
+        } else {
+            details.style.display = 'none';
+        }
+    }
+</script>
 
 </body>
 </html>

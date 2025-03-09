@@ -14,80 +14,61 @@
 
   <style>
     body {
-      background-color: #121212; /* Dark theme */
+      background-color: #222222;
       color: #ffffff;
-      font-family: 'Poppins', sans-serif;
+      font-family: 'Roboto', sans-serif;
     }
     .dashboard-container {
-      background: linear-gradient(135deg, #1f1f1f, #292929);
-      border: 2px solid yellow; /* Yellow Border */
-      padding: 30px;
-      border-radius: 15px;
-      box-shadow: 0 0 15px rgba(255, 255, 0, 0.7); /* Glowing effect */
-      max-width: 800px;
-      margin: auto;
+      background: #333333;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+      margin: 20px auto;
+      max-width: 900px;
       text-align: left;
-      transition: 0.3s ease-in-out;
-    }
-    .dashboard-container:hover {
-      box-shadow: 0 0 20px rgba(255, 255, 0, 1);
-    }
-    .status-box {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-      margin-top: 20px;
-      justify-content: center;
-    }
-    .status-label {
-      font-weight: bold;
-      font-size: 18px;
-      color: yellow;
     }
     .status-btn {
-      padding: 10px 20px;
+      padding: 10px 15px;
       border-radius: 5px;
-      font-size: 16px;
-      font-weight: bold;
-      border: 2px solid yellow;
-      color: black;
-      cursor: pointer;
-      transition: all 0.3s;
-    }
-    .status-btn.active {
-      background-color: yellow;
-      color: black;
-      box-shadow: 0px 0px 10px rgba(255, 255, 0, 0.8);
-    }
-    .btn-save {
-      background-color: #ffc107;
-      color: black;
-      font-weight: bold;
-      border: none;
-      padding: 8px 15px;
-      border-radius: 5px;
+      font-size: 14px;
+      border: 1px solid #4CAF50;
+      background-color: #333333;
+      color: white;
       cursor: pointer;
       transition: 0.3s;
     }
+    .status-btn.active {
+      background-color: #4CAF50;
+      color: white;
+    }
+    .btn-save {
+      background-color: #4CAF50;
+      border: none;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
     .btn-save:hover {
-      background-color: #e0a800;
+      background-color: #45a049;
     }
     .navbar {
-      background-color: black;
-      padding: 10px;
+      background-color: #000;
+      color: white;
+      padding: 15px;
     }
     .navbar-brand {
-      font-weight: bold;
-      color: yellow !important;
+      color: #4CAF50 !important;
     }
     .nav-link {
       color: white !important;
-      transition: 0.3s;
+      font-weight: bold;
     }
     .nav-link:hover {
-      color: yellow !important;
+      color: #4CAF50 !important;
     }
   </style>
+
 </head>
 <body>
 
