@@ -201,10 +201,11 @@
     String bookingDate = request.getParameter("pickupDateTime").replace("T", " ") + ":00";
     String status = "Pending";
     String createdAt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+    String paymentMethod = request.getParameter("paymentMethod");
 
 
 
-    String sql = "INSERT INTO bookings (username, driver_id, vehicle_id, pickup_location, drop_off_location, special_needs, booking_date, status, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    String sql = "INSERT INTO bookings (username, driver_id, vehicle_id, pickup_location, drop_off_location, special_needs, booking_date, status, created_at,payment_type ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     PreparedStatement pstmt = null;
     try {
       pstmt = conn.prepareStatement(sql);
@@ -217,6 +218,7 @@
       pstmt.setString(7, bookingDate);
       pstmt.setString(8, status);
       pstmt.setString(9, createdAt);
+      pstmt.setString(10,paymentMethod);
            // Set the final amount
 
 
@@ -315,9 +317,81 @@
         <div id="finalAmount"></div>
       </div>
 
+      <div class="mb-3">
+        <label for="paymentMethod" class="form-label">Payment Method</label>
+        <select id="paymentMethod" name="paymentMethod" class="form-control" required onchange="checkPaymentMethod()">
+          <option value="">Select Payment Method</option>
+          <option value="cash">Cash</option>
+          <option value="card">Card</option>
+        </select>
+      </div>
+
+      <!-- Card Details Section -->
+
+
+      <script>
+        function checkPaymentMethod() {
+          const paymentMethod = document.getElementById("paymentMethod").value;
+          const cardDetails = document.getElementById("cardDetails");
+
+          // Show or hide the card details input fields
+          if (paymentMethod === "card") {
+            cardDetails.style.display = "block";  // Show the card details section
+          } else {
+            cardDetails.style.display = "none";   // Hide the card details section
+            clearErrors(); // Clear errors when switching back to cash
+          }
+        }
+
+        function validateCardNumber() {
+          const cardNumber = document.getElementById("cardNumber").value;
+          const cardNumberError = document.getElementById("cardNumberError");
+
+          // Validate card number (simple 16-digit check)
+          const cardNumberPattern = /^[0-9]{16}$/;
+          if (!cardNumberPattern.test(cardNumber)) {
+            cardNumberError.style.display = "block";
+          } else {
+            cardNumberError.style.display = "none";
+          }
+        }
+
+        function validateExpiryDate() {
+          const expiryDate = document.getElementById("expiryDate").value;
+          const expiryDateError = document.getElementById("expiryDateError");
+
+          // Validate expiry date (must not be empty)
+          if (!expiryDate) {
+            expiryDateError.style.display = "block";
+          } else {
+            expiryDateError.style.display = "none";
+          }
+        }
+
+        function validateCVV() {
+          const cvv = document.getElementById("cvv").value;
+          const cvvError = document.getElementById("cvvError");
+
+          // Validate CVV (simple 3-digit check)
+          const cvvPattern = /^[0-9]{3}$/;
+          if (!cvvPattern.test(cvv)) {
+            cvvError.style.display = "block";
+          } else {
+            cvvError.style.display = "none";
+          }
+        }
+
+        function clearErrors() {
+          document.getElementById("cardNumberError").style.display = "none";
+          document.getElementById("expiryDateError").style.display = "none";
+          document.getElementById("cvvError").style.display = "none";
+        }
+      </script>
+
+
       <!-- Submit button -->
       <div class="mb-3">
-        <input type="submit" value="Book Now">
+
         <button type="submit" class="btn btn-primary w-100">Submit Booking</button>
       </div>
     </form>
@@ -336,32 +410,102 @@
           document.getElementById("finalAmount").innerHTML = "";
         }
       }
-
-      // // Calculate the bill with discount
-      // function calculateBill() {
-      //   var rentalPrice = parseFloat(document.getElementById("rentalPrice").value);
-      //   var couponCode = document.getElementById("couponCode").value.trim();
-      //
-      //   if (!isNaN(rentalPrice) && couponCode !== "") {
-      //     var xhr = new XMLHttpRequest();
-      //     xhr.open("GET", "applyCoupon.jsp?coupon=" + encodeURIComponent(couponCode), true);
-      //     xhr.onreadystatechange = function () {
-      //       if (xhr.readyState === 4 && xhr.status === 200) {
-      //         var discount = parseFloat(xhr.responseText);
-      //         if (isNaN(discount)) {
-      //           discount = 0;
-      //         }
-      //         var discountAmount = (rentalPrice * discount) / 100;
-      //         var finalAmount = rentalPrice - discountAmount;
-      //
-      //         document.getElementById("discountAmount").innerHTML = "Discount: " + discountAmount.toFixed(2) + " LKR";
-      //         document.getElementById("finalAmount").innerHTML = "Final Price: " + finalAmount.toFixed(2) + " LKR";
-      //       }
-      //     };
-      //     xhr.send();
-      //   }
-      // }
     </script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const pickupLocation = document.getElementById("pickupLocation");
+        const dropOffLocation = document.getElementById("dropOffLocation");
+        const pickupDateTime = document.getElementById("pickupDateTime");
+        const specialNeeds = document.getElementById("specialNeeds");
+        const couponCheckbox = document.getElementById("discountCheckbox");
+        const couponSection = document.getElementById("couponSection");
+        const couponCode = document.getElementById("couponCode");
+        const bookingForm = document.querySelector("form");
+
+        // Prevent same pickup & drop-off location
+        function validateLocations() {
+          if (pickupLocation.value && dropOffLocation.value && pickupLocation.value === dropOffLocation.value) {
+            alert("Pickup and drop-off locations cannot be the same. Please select different locations.");
+            dropOffLocation.value = ""; // Reset drop-off selection
+          }
+        }
+
+        pickupLocation.addEventListener("change", validateLocations);
+        dropOffLocation.addEventListener("change", validateLocations);
+
+        // Validate booking date to be in the future but within 2 days
+        function validateDateTime() {
+          const now = new Date();
+          const selectedDateTime = new Date(pickupDateTime.value);
+
+          // Calculate max allowed date (2 days from now)
+          const maxDate = new Date();
+          maxDate.setDate(maxDate.getDate() + 2);
+
+          if (selectedDateTime <= now) {
+            alert("Pickup date and time must be in the future. Please select a valid time.");
+            pickupDateTime.value = "";
+          } else if (selectedDateTime > maxDate) {
+            alert("You can only book a ride within the next 2 days. Please select a valid date.");
+            pickupDateTime.value = "";
+          }
+        }
+
+        pickupDateTime.addEventListener("change", validateDateTime);
+
+        // Alert user for special needs input
+        function validateSpecialNeeds() {
+          const invalidWords = ["random", "unnecessary", "anything", "nothing", "idk"];
+          let inputText = specialNeeds.value.toLowerCase();
+
+          for (let word of invalidWords) {
+            if (inputText.includes(word)) {
+              alert("Please enter only specific special needs. Avoid unnecessary details.");
+              specialNeeds.value = "";
+              return;
+            }
+          }
+        }
+
+        specialNeeds.addEventListener("input", validateSpecialNeeds);
+
+        // Show/hide coupon input field
+        function toggleCouponInput() {
+          if (couponCheckbox.checked) {
+            couponSection.style.display = "block";
+          } else {
+            couponSection.style.display = "none";
+            couponCode.value = "";
+          }
+        }
+
+        couponCheckbox.addEventListener("change", toggleCouponInput);
+
+        // Final validation before form submission
+        bookingForm.addEventListener("submit", function (event) {
+          const paymentMethod = document.getElementById("paymentMethod").value;  // Get the selected payment method
+          let confirmPayment;
+
+          if (paymentMethod === "cash") {
+            confirmPayment = confirm("You must pay by cash to the driver. Do you want to proceed?");
+          } else if (paymentMethod === "card") {
+            confirmPayment = confirm("You will pay by card. Do you want to proceed?");
+
+            // If user selects "card", redirect to the card details form
+            if (confirmPayment) {
+              window.location.href = "card-details.jsp";  // Redirect to another page with the card details form
+            }
+          }
+
+          if (!confirmPayment) {
+            event.preventDefault();  // Prevent form submission if user cancels the payment confirmation
+          }
+        });
+
+
+      });
+    </script>
+
 
   </div>
 </div>

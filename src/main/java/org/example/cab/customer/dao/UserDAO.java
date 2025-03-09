@@ -40,6 +40,26 @@ public class UserDAO {
         }
         return false;
     }
+    public boolean isNICExists(String nic) {
+        boolean exists = false;
+        String sql = "SELECT COUNT(*) FROM users WHERE nic = ?";
+
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+            preparedStatement.setString(1, nic);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                exists = resultSet.getInt(1) > 0; // If count > 0, NIC exists
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return exists;
+    }
+
 
     public User validateUser(String username, String password) {
         String sql = "SELECT * FROM users WHERE username = ? AND password = ?";

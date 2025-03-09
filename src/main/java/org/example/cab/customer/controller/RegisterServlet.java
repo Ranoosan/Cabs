@@ -21,13 +21,21 @@ public class RegisterServlet extends HttpServlet {
         String gender = request.getParameter("gender");
         String nic = request.getParameter("nic");
 
-        // Assuming the date is sent in yyyy-mm-dd format
+        // Convert date string to java.sql.Date
         String dobString = request.getParameter("date_of_birth");
-        Date dateOfBirth = Date.valueOf(dobString); // Convert String to java.sql.Date
+        Date dateOfBirth = Date.valueOf(dobString);
 
-        User user = new User(0, username, password, email, contactNumber, address, gender, nic, dateOfBirth); // Use 0 or default value for id
         UserDAO userDAO = new UserDAO();
 
+        // ✅ Check if NIC already exists in the database
+        if (userDAO.isNICExists(nic)) {
+            request.setAttribute("errorMessage", "Error: NIC already registered! Registration not allowed.");
+            request.getRequestDispatcher("/customer/register.jsp").forward(request, response);
+            return;
+        }
+
+        // ✅ If NIC is unique, proceed with registration
+        User user = new User(0, username, password, email, contactNumber, address, gender, nic, dateOfBirth);
 
         if (userDAO.registerUser(user)) {
             request.setAttribute("user", user);
