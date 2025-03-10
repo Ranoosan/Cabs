@@ -270,15 +270,15 @@
           <!-- Colombo Zones -->
           <option value="Wellawatta">Wellawatta</option>
           <option value="Fort">Fort</option>
-          <option value="Borella">Fort</option>
-          <option value="Dematagoda">Fort</option>
-          <option value="Maradana">Fort</option>
-          <option value="Pettah">Fort</option>
-          <option value="Hulftsdorp">Fort</option>
-          <option value="Kotahena">Fort</option>
-          <option value="Grandpass">Fort</option>
-          <option value="Bambalapitiya">Fort</option>
-          <option value="Kollupitiya ">Fort</option>
+          <option value="Borella">Borella</option>
+          <option value="Dematagoda">Dematagoda</option>
+          <option value="Maradana">Maradana</option>
+          <option value="Pettah">Pettah</option>
+          <option value="Hulftsdorp">Hulftsdorp</option>
+          <option value="Kotahena">Kotahena</option>
+          <option value="Grandpass">Grandpass</option>
+          <option value="Bambalapitiya">Bambalapitiya</option>
+          <option value="Kollupitiya ">Kollupitiya</option>
           <!-- Other Cities -->
 
         </select>
@@ -291,15 +291,15 @@
           <!-- Same Locations for Drop-Off -->
           <option value="Wellawatta">Wellawatta</option>
           <option value="Fort">Fort</option>
-          <option value="Borella">Fort</option>
-          <option value="Dematagoda">Fort</option>
-          <option value="Maradana">Fort</option>
-          <option value="Pettah">Fort</option>
-          <option value="Hulftsdorp">Fort</option>
-          <option value="Kotahena">Fort</option>
-          <option value="Grandpass">Fort</option>
-          <option value="Bambalapitiya">Fort</option>
-          <option value="Kollupitiya ">Fort</option>
+          <option value="Borella">Borella</option>
+          <option value="Dematagoda">Dematagoda</option>
+          <option value="Maradana">Maradana</option>
+          <option value="Pettah">Pettah</option>
+          <option value="Hulftsdorp">Hulftsdorp</option>
+          <option value="Kotahena">Kotahena</option>
+          <option value="Grandpass">Grandpass</option>
+          <option value="Bambalapitiya">Bambalapitiya</option>
+          <option value="Kollupitiya ">Kollupitiya</option>
 
 
           <!-- Other Cities -->
