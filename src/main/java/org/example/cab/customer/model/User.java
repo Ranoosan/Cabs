@@ -29,7 +29,16 @@ public class User {
 
     }
 
-
+    public User(String username, String password, String email, String contactNumber, String address, String gender, String nic, String dateOfBirth) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.contactNumber = contactNumber;
+        this.address = address;
+        this.gender = gender;
+        this.nic = nic;
+//        this.dateOfBirth = Date.valueOf(dateOfBirth); // Convert String to java.sql.Date
+    }
 
 
     // Getters and Setters

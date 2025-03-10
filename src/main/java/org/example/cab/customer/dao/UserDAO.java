@@ -18,6 +18,8 @@ public class UserDAO {
         }
     }
 
+
+
     public boolean registerUser(User user) {
         String sql = "INSERT INTO users (username, password, email, contact_number, address, gender, nic, date_of_birth) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD);
