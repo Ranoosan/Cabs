@@ -14,22 +14,22 @@
     <title>My Booked Rides</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-    .navbar {
-        background-color: #1e1e1e; /* Dark navbar background */
-        padding: 10px;
-    }
-    .navbar-brand {
-        font-weight: bold;
-        color: #28a745 !important; /* Green text */
-    }
-    .nav-link {
-        color: #ffffff !important;
-        transition: 0.3s;
-    }
-    .nav-link:hover {
-        color: #28a745 !important; /* Green text on hover */
-    }
-</style>
+        .navbar {
+            background-color: #1e1e1e; /* Dark navbar background */
+            padding: 10px;
+        }
+        .navbar-brand {
+            font-weight: bold;
+            color: #28a745 !important; /* Green text */
+        }
+        .nav-link {
+            color: #ffffff !important;
+            transition: 0.3s;
+        }
+        .nav-link:hover {
+            color: #28a745 !important; /* Green text on hover */
+        }
+    </style>
 </head>
 
 <body style="background-color: #121212; color: #28a745;">
@@ -97,10 +97,7 @@
         <tbody>
         <%
             for (Booking booking : bookings) {
-                // Get user details by username
-                org.example.cab.customer.model.User customer = bookingDAO.getUserByUsername(booking.getUsername());
                 String currentStatus = booking.getStatus();
-                boolean isAcceptedOrRejected = "Accepted".equals(currentStatus) || "Rejected".equals(currentStatus);
         %>
         <tr>
             <td><%= booking.getBookingId() %></td>
@@ -114,10 +111,13 @@
             <td><%= booking.getPickupDateTime() %></td>
             <td>
                 <%
-                    // If booking is already accepted or rejected, disable both buttons
-                    if (isAcceptedOrRejected) {
+                    if ("Accepted".equals(currentStatus)) {
                 %>
-                <span class="btn btn-secondary disabled">Already Accepted/Rejected</span>
+                <a href="updateBookingStatus.jsp?bookingId=<%= booking.getBookingId() %>&status=Completed" class="btn btn-primary">Completed</a>
+                <%
+                } else if ("Rejected".equals(currentStatus) || "Completed".equals(currentStatus)) {
+                %>
+                <span class="btn btn-secondary disabled">No Actions</span>
                 <%
                 } else {
                 %>

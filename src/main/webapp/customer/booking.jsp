@@ -6,6 +6,7 @@
 <%@ page import="org.example.cab.Admin.dao.DriverDAO" %>
 <%@ page import="org.example.cab.Admin.model.Vehicle" %>
 <%@ page import="org.example.cab.Admin.dao.VehicleDAO" %>
+<%@ page import="java.math.BigDecimal" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -68,9 +69,11 @@
 <script>
   function calculateBill() {
     var rentalPrice = parseFloat(document.getElementById("rentalPrice").value);
+    var fare = parseFloat(document.getElementById("fare").value);
     var couponCode = document.getElementById("couponCode").value.trim();
 
-    if (!isNaN(rentalPrice) && couponCode !== "") {
+    // Ensure both rental price and fare are available
+    if (!isNaN(rentalPrice) && !isNaN(fare) && couponCode !== "") {
       var xhr = new XMLHttpRequest();
       xhr.open("GET", "applyCoupon.jsp?coupon=" + encodeURIComponent(couponCode), true);
       xhr.onreadystatechange = function () {
@@ -82,9 +85,10 @@
             alert(response);
           } else {
             var discount = parseFloat(response);
-            var discountAmount = (rentalPrice * discount) / 100;
-            var finalAmount = rentalPrice - discountAmount;
+            var discountAmount = (rentalPrice + fare) * discount / 100; // Apply discount to total amount (Rental + Fare)
+            var finalAmount = (rentalPrice + fare) - discountAmount;
 
+            // Update the UI with discount and final amount
             document.getElementById("discountAmount").innerHTML = "Discount: " + discountAmount.toFixed(2) + " LKR";
             document.getElementById("finalAmount").innerHTML = "Final Price: " + finalAmount.toFixed(2) + " LKR";
           }
@@ -92,10 +96,9 @@
       };
       xhr.send();
     } else {
-      alert("Please enter a valid rental price and coupon code.");
+      alert("Please enter a valid rental price, fare, and coupon code.");
     }
   }
-
 </script>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container">
@@ -239,6 +242,7 @@
   }
 %>
 
+
 <!-- Booking Form Section -->
 <div class="container my-4 booking-form-container">
   <div class="card booking-form-card">
@@ -263,13 +267,20 @@
         <label for="pickupLocation" class="form-label">Pickup Location</label>
         <select id="pickupLocation" name="pickupLocation" class="form-control" required>
           <option value="">Select Pickup Location</option>
-          <option value="Colombo">Colombo</option>
-          <option value="Kandy">Kandy</option>
-          <option value="Galle">Galle</option>
-          <option value="Negombo">Negombo</option>
-          <option value="Batticaloa">Batticaloa</option>
-          <option value="Kurunegala">Kurunegala</option>
-          <option value="Jaffna">Jaffna</option>
+          <!-- Colombo Zones -->
+          <option value="Wellawatta">Wellawatta</option>
+          <option value="Fort">Fort</option>
+          <option value="Borella">Fort</option>
+          <option value="Dematagoda">Fort</option>
+          <option value="Maradana">Fort</option>
+          <option value="Pettah">Fort</option>
+          <option value="Hulftsdorp">Fort</option>
+          <option value="Kotahena">Fort</option>
+          <option value="Grandpass">Fort</option>
+          <option value="Bambalapitiya">Fort</option>
+          <option value="Kollupitiya ">Fort</option>
+          <!-- Other Cities -->
+
         </select>
       </div>
 
@@ -277,15 +288,26 @@
         <label for="dropOffLocation" class="form-label">Drop-off Location</label>
         <select id="dropOffLocation" name="dropOffLocation" class="form-control" required>
           <option value="">Select Drop-Off Location</option>
-          <option value="Colombo">Colombo</option>
-          <option value="Kandy">Kandy</option>
-          <option value="Galle">Galle</option>
-          <option value="Negombo">Negombo</option>
-          <option value="Batticaloa">Batticaloa</option>
-          <option value="Kurunegala">Kurunegala</option>
-          <option value="Jaffna">Jaffna</option>
+          <!-- Same Locations for Drop-Off -->
+          <option value="Wellawatta">Wellawatta</option>
+          <option value="Fort">Fort</option>
+          <option value="Borella">Fort</option>
+          <option value="Dematagoda">Fort</option>
+          <option value="Maradana">Fort</option>
+          <option value="Pettah">Fort</option>
+          <option value="Hulftsdorp">Fort</option>
+          <option value="Kotahena">Fort</option>
+          <option value="Grandpass">Fort</option>
+          <option value="Bambalapitiya">Fort</option>
+          <option value="Kollupitiya ">Fort</option>
+
+
+          <!-- Other Cities -->
+
         </select>
       </div>
+
+
 
       <div class="mb-3">
         <label for="specialNeeds" class="form-label">Special Needs (Optional)</label>
@@ -317,6 +339,21 @@
         <div id="finalAmount"></div>
       </div>
 
+      <!-- Fare display field -->
+      <div class="mb-3">
+        <label for="fare" class="form-label">Fare</label>
+        <input type="text" id="fare" name="fare" class="form-control" readonly>
+      </div>
+
+      <!-- Total Amount Display -->
+      <div class="mb-3">
+        <label for="totalAmount" class="form-label">Total Amount (Rental + Fare)</label>
+        <input type="text" id="totalAmount" class="form-control" readonly>
+      </div>
+
+
+
+
       <div class="mb-3">
         <label for="paymentMethod" class="form-label">Payment Method</label>
         <select id="paymentMethod" name="paymentMethod" class="form-control" required onchange="checkPaymentMethod()">
@@ -326,6 +363,196 @@
         </select>
       </div>
 
+      <script>
+        // Predefined fare rates for different pickup and drop-off locations
+        const fareRates = {
+          "Wellawatta": {
+            "Wellawatta": 800, // Fare from Wellawatta to Wellawatta
+            "Fort": 1000, // Fare from Wellawatta to Fort
+            "Borella": 1200,
+            "Dematagoda": 1300,
+            "Maradana": 1400,
+            "Pettah": 1100,
+            "Hulftsdorp": 1150,
+            "Kotahena": 1250,
+            "Grandpass": 1350,
+            "Bambalapitiya": 900,
+            "Kollupitiya": 950
+          },
+          "Fort": {
+            "Wellawatta": 1000, // Fare from Fort to Wellawatta
+            "Fort": 800, // Fare from Fort to Fort
+            "Borella": 1100,
+            "Dematagoda": 1200,
+            "Maradana": 1300,
+            "Pettah": 900,
+            "Hulftsdorp": 1000,
+            "Kotahena": 1150,
+            "Grandpass": 1250,
+            "Bambalapitiya": 1000,
+            "Kollupitiya": 1050
+          },
+          "Borella": {
+            "Wellawatta": 1200,
+            "Fort": 1100,
+            "Borella": 800,
+            "Dematagoda": 900,
+            "Maradana": 1000,
+            "Pettah": 1100,
+            "Hulftsdorp": 1150,
+            "Kotahena": 1200,
+            "Grandpass": 1300,
+            "Bambalapitiya": 1300,
+            "Kollupitiya": 1250
+          },
+          "Dematagoda": {
+            "Wellawatta": 1300,
+            "Fort": 1200,
+            "Borella": 900,
+            "Dematagoda": 800,
+            "Maradana": 1000,
+            "Pettah": 1050,
+            "Hulftsdorp": 1100,
+            "Kotahena": 1150,
+            "Grandpass": 1250,
+            "Bambalapitiya": 1300,
+            "Kollupitiya": 1250
+          },
+          "Maradana": {
+            "Wellawatta": 1400,
+            "Fort": 1300,
+            "Borella": 1000,
+            "Dematagoda": 1000,
+            "Maradana": 800,
+            "Pettah": 1100,
+            "Hulftsdorp": 1200,
+            "Kotahena": 1250,
+            "Grandpass": 1350,
+            "Bambalapitiya": 1400,
+            "Kollupitiya": 1300
+          },
+          "Pettah": {
+            "Wellawatta": 1100,
+            "Fort": 900,
+            "Borella": 1100,
+            "Dematagoda": 1050,
+            "Maradana": 1100,
+            "Pettah": 800,
+            "Hulftsdorp": 950,
+            "Kotahena": 1000,
+            "Grandpass": 1100,
+            "Bambalapitiya": 1200,
+            "Kollupitiya": 1150
+          },
+          "Hulftsdorp": {
+            "Wellawatta": 1150,
+            "Fort": 1000,
+            "Borella": 1150,
+            "Dematagoda": 1100,
+            "Maradana": 1200,
+            "Pettah": 950,
+            "Hulftsdorp": 800,
+            "Kotahena": 1050,
+            "Grandpass": 1100,
+            "Bambalapitiya": 1250,
+            "Kollupitiya": 1200
+          },
+          "Kotahena": {
+            "Wellawatta": 1250,
+            "Fort": 1150,
+            "Borella": 1200,
+            "Dematagoda": 1150,
+            "Maradana": 1250,
+            "Pettah": 1000,
+            "Hulftsdorp": 1050,
+            "Kotahena": 800,
+            "Grandpass": 1100,
+            "Bambalapitiya": 1300,
+            "Kollupitiya": 1250
+          },
+          "Grandpass": {
+            "Wellawatta": 1350,
+            "Fort": 1250,
+            "Borella": 1300,
+            "Dematagoda": 1250,
+            "Maradana": 1350,
+            "Pettah": 1100,
+            "Hulftsdorp": 1100,
+            "Kotahena": 1100,
+            "Grandpass": 800,
+            "Bambalapitiya": 1400,
+            "Kollupitiya": 1300
+          },
+          "Bambalapitiya": {
+            "Wellawatta": 900,
+            "Fort": 1000,
+            "Borella": 1300,
+            "Dematagoda": 1300,
+            "Maradana": 1400,
+            "Pettah": 1200,
+            "Hulftsdorp": 1250,
+            "Kotahena": 1300,
+            "Grandpass": 1400,
+            "Bambalapitiya": 800,
+            "Kollupitiya": 1100
+          },
+          "Kollupitiya": {
+            "Wellawatta": 950,
+            "Fort": 1050,
+            "Borella": 1250,
+            "Dematagoda": 1250,
+            "Maradana": 1300,
+            "Pettah": 1150,
+            "Hulftsdorp": 1200,
+            "Kotahena": 1250,
+            "Grandpass": 1300,
+            "Bambalapitiya": 1100,
+            "Kollupitiya": 800
+          }
+        };
+
+
+        // Listen for changes on the pickup and drop-off location dropdowns
+        document.getElementById('pickupLocation').addEventListener('change', updateFare);
+        document.getElementById('dropOffLocation').addEventListener('change', updateFare);
+
+        function updateFare() {
+          const pickupLocation = document.getElementById('pickupLocation').value;
+          const dropOffLocation = document.getElementById('dropOffLocation').value;
+
+          // Ensure both locations are selected before proceeding
+          if (pickupLocation && dropOffLocation) {
+            // Check if the fare for the selected locations exists in the predefined fareRates object
+            const fare = fareRates[pickupLocation] && fareRates[pickupLocation][dropOffLocation];
+
+            // If a fare is found, update the fare input, otherwise show 'N/A'
+            if (fare) {
+              document.getElementById('fare').value = fare;
+            } else {
+              document.getElementById('fare').value = 'N/A'; // No fare found
+            }
+          } else {
+            // Clear the fare if either location is not selected
+            document.getElementById('fare').value = '';
+          }
+
+          // Calculate total amount (Rental + Fare) whenever fare changes
+          calculateTotalAmount();
+        }
+
+        function calculateTotalAmount() {
+          const rentalPrice = parseFloat(document.getElementById('rentalPrice').value) || 0;
+          const fare = parseFloat(document.getElementById('fare').value) || 0;
+
+          // If a fare is not 'N/A', calculate the total amount
+          if (fare !== 'N/A') {
+            const totalAmount = rentalPrice + fare;
+            document.getElementById('totalAmount').value = totalAmount.toFixed(2); // Round to 2 decimal places
+          } else {
+            document.getElementById('totalAmount').value = ''; // If no valid fare, clear the total
+          }
+        }
+      </script>
       <!-- Card Details Section -->
 
 
@@ -386,6 +613,7 @@
           document.getElementById("expiryDateError").style.display = "none";
           document.getElementById("cvvError").style.display = "none";
         }
+
       </script>
 
 
