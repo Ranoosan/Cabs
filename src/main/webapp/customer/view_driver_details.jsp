@@ -38,12 +38,107 @@
     <title>Driver Details</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
+<style>
+    body {
+        background-color: #f4f8fc; /* Light background to keep it clean */
+        font-family: 'Roboto', sans-serif;
+        color: #333;
+    }
+
+    .navbar {
+        background: linear-gradient(to right, #1d72b8, #ff5f6d); /* Gradient background */
+        padding: 15px 20px;
+    }
+
+    .navbar a {
+        color: white;
+        font-size: 16px;
+    }
+
+    .navbar a:hover {
+        background-color: #222;
+        border-radius: 5px;
+    }
+
+    .container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 30px 15px;
+    }
+
+    h2 {
+        font-size: 24px;
+        font-weight: bold;
+        color: #1d72b8;
+        text-align: center;
+    }
+
+    p {
+        font-size: 16px;
+        color: #555;
+        line-height: 1.5;
+    }
+
+    .card {
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+        margin-bottom: 30px;
+    }
+
+    .card p {
+        font-size: 14px;
+        color: #555;
+    }
+
+    .btn-primary {
+        background-color: #007BFF;
+        border: none;
+        padding: 12px 20px;
+        font-size: 16px;
+        border-radius: 5px;
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+    }
+
+    .navbar-toggler-icon {
+        background-color: white;
+    }
+
+    .navbar-nav .nav-link {
+        font-size: 16px;
+    }
+
+    .navbar-nav .nav-link:hover {
+        background-color: #555;
+        border-radius: 5px;
+    }
+
+    /* Responsive design for smaller screens */
+    @media (max-width: 768px) {
+        .container {
+            padding: 20px;
+        }
+
+        h2 {
+            font-size: 20px;
+        }
+
+        .card p {
+            font-size: 12px;
+        }
+    }
+</style>
+
 <body>
 
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
-        <a class="navbar-brand" href="customer_dashboard.jsp">Cab Services</a>
+        <a class="navbar-brand" href="welcome.jsp">Cab Services</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -54,17 +149,17 @@
                     <a class="nav-link" href="view_cus_vehicle.jsp">Vehicles</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="customer_bookings.jsp">My Bookings</a>
+                    <a class="nav-link" href="user_bookings.jsp">My Bookings</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="customer_profile.jsp">Profile</a>
+                    <a class="nav-link" href="profile.jsp">Profile</a>
                 </li>
                 <% if (user != null) { %>
                 <li class="nav-item">
                     <a class="nav-link" href="#">Welcome, <%= user.getUsername() %></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link btn btn-danger btn-sm" href="logout.jsp">Logout</a>
+                    <a class="nav-link btn btn-danger btn-sm" href="login.jsp">Logout</a>
                 </li>
                 <% } else { %>
                 <li class="nav-item">

@@ -11,7 +11,6 @@
     return;
   }
   User user = (User) sessionObj.getAttribute("user");
-
 %>
 
 <!DOCTYPE html>
@@ -26,37 +25,108 @@
 
   <style>
     body {
-      background-color: #F8F9FA;
-      color: #343A40;
+      background-color: #e0f0f6; /* Lighter shade of blue similar to navbar */
+      color: #333;
+      font-family: 'Roboto', sans-serif;
     }
+
+    .navbar {
+      background: linear-gradient(to right, #1d72b8, #ff5f6d); /* Gradient for modern look */
+      padding: 15px 20px;
+    }
+    .navbar a {
+      color: white;
+      font-size: 16px;
+    }
+    .navbar a:hover {
+      background-color: #222;
+      border-radius: 5px;
+    }
+
     .vehicle-container {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      margin: 50px 0;
+      margin: 50px auto;
+      max-width: 1200px; /* Limit the container width */
     }
+
     .vehicle-card {
-      flex: 0 0 45%;
-      margin: 20px;
-      transition: transform 0.3s;
+      flex: 0 0 45%; /* 45% width on larger screens */
+      margin: 15px;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
       cursor: pointer;
+      transition: transform 0.3s, box-shadow 0.3s ease;
     }
+
     .vehicle-card:hover {
       transform: scale(1.05);
+      box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.2);
     }
+
     .vehicle-image {
       width: 100%;
       height: auto;
+      border-radius: 8px;
+    }
+
+    .card-body {
+      padding: 20px;
+    }
+
+    .card-title {
+      font-size: 18px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .card-text {
+      font-size: 14px;
+      color: #555;
+    }
+
+    .btn-primary {
+      background-color: #007BFF;
+      border: none;
+      padding: 12px 20px;
+      font-size: 16px;
       border-radius: 5px;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background-color: #0056b3;
+    }
+
+    .navbar-toggler-icon {
+      background-color: white;
+    }
+
+    .navbar-nav .nav-link {
+      font-size: 16px;
+    }
+
+    .navbar-nav .nav-link:hover {
+      background-color: #555;
+      border-radius: 5px;
+    }
+
+    /* Adjust for smaller screen sizes */
+    @media (max-width: 768px) {
+      .vehicle-card {
+        flex: 0 0 90%; /* Take more space on smaller screens */
+      }
     }
   </style>
 </head>
 <body>
 
 <!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar navbar-expand-lg navbar-dark">
   <div class="container">
-    <a class="navbar-brand" href="customer_dashboard.jsp">Cab Services</a>
+    <a class="navbar-brand" href="welcome.jsp">Cab Services</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
             aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -67,17 +137,17 @@
           <a class="nav-link" href="view_cus_vehicle.jsp">Vehicles</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="customer_bookings.jsp">My Bookings</a>
+          <a class="nav-link" href="user_bookings.jsp">My Bookings</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="customer_profile.jsp">Profile</a>
+          <a class="nav-link" href="profile.jsp">Profile</a>
         </li>
         <% if (user != null) { %>
         <li class="nav-item">
-          <a class="nav-link" href="#">Welcome, <%= user.getUsername() %></a>
+          <a class="nav-link" href="profile.jsp">Welcome, <%= user.getUsername() %></a>
         </li>
         <li class="nav-item">
-          <a class="nav-link btn btn-danger btn-sm" href="logout.jsp">Logout</a>
+          <a class="nav-link btn btn-danger btn-sm" href="login.jsp">Logout</a>
         </li>
         <% } else { %>
         <li class="nav-item">
@@ -98,7 +168,6 @@
     for (Vehicle vehicle : vehicles) {
   %>
   <div class="card vehicle-card" onclick="window.location='<%= request.getContextPath() %>/customer/view_driver_details.jsp?vehicleId=<%= vehicle.getId() %>&customerId=<%= user.getUsername() %>'">
-
     <img src="<%= request.getContextPath() + "/" + vehicle.getVehiclePhoto() %>" class="card-img-top vehicle-image" alt="Vehicle Image">
     <div class="card-body">
       <h5 class="card-title">Category: <%= vehicle.getCategory() %></h5>
@@ -107,7 +176,6 @@
         <strong>CC:</strong> <%= vehicle.getCc() %><br>
         <strong>Engine No:</strong> <%= vehicle.getEngineNo() %><br>
         <strong>Available:</strong> <%= vehicle.isAvailable() ? "Yes" : "No" %>
-
       </p>
     </div>
   </div>
@@ -117,8 +185,6 @@
 </div>
 
 <a href="${pageContext.request.contextPath}/customer/welcome.jsp" class="btn btn-primary mt-3">Back to Home</a>
-
-
 
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

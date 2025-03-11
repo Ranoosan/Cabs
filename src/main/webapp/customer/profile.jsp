@@ -79,9 +79,15 @@
     <title>User Profile</title>
     <!-- Bootstrap CDN -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
     <style>
+        body {
+            background-color: #e0f0f6; /* Lighter shade of blue similar to navbar */
+            color: #333;
+            font-family: 'Roboto', sans-serif;
+        }
         .container {
-            max-width: 600px;
+            max-width: 1600px;
         }
         .form-group label {
             font-weight: bold;
@@ -92,10 +98,55 @@
         .error {
             color: red;
         }
-
+        .navbar {
+            background: linear-gradient(to right, #1d72b8, #ff5f6d); /* Gradient for modern look */
+            padding: 15px 20px;
+        }
+        .navbar a {
+            color: white;
+            font-size: 16px;
+        }
+        .navbar a:hover {
+            background-color: #222;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
+<nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+        <a class="navbar-brand" href="welcome.jsp">Cab Services</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="view_cus_vehicle.jsp">Vehicles</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="user_bookings.jsp">My Bookings</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="profile.jsp">Profile</a>
+                </li>
+                <% if (user != null) { %>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Welcome, <%= user.getUsername() %></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link btn btn-danger btn-sm" href="login.jsp">Logout</a>
+                </li>
+                <% } else { %>
+                <li class="nav-item">
+                    <a class="nav-link btn btn-primary btn-sm" href="login.jsp">Login</a>
+                </li>
+                <% } %>
+            </ul>
+        </div>
+    </div>
+</nav>
 
 
 <div class="container mt-5">

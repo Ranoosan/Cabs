@@ -7,74 +7,66 @@
     <title>Cab Service Dashboard</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Roboto', sans-serif;
+            background-color: #e0f0f6; /* Lighter shade of the navbar color */
             margin: 0;
             padding: 0;
-            background-color: #f4f4f4;
         }
         .navbar {
-            background-color: #333;
-            overflow: hidden;
+            position: sticky;
+            top: 0;
+            background: linear-gradient(to right, #1d72b8, #ff5f6d);
             padding: 15px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-        .navbar h2 {
-            color: white;
-            margin: 0;
-        }
         .navbar a {
             color: white;
             padding: 12px 20px;
-            text-decoration: none;
             font-size: 16px;
+            text-decoration: none;
+            margin: 0 10px;
         }
         .navbar a:hover {
-            background-color: #575757;
+            background-color: #222;
             border-radius: 5px;
-        }
-        .container {
-            text-align: center;
-            padding: 20px;
+            transition: background-color 0.3s ease;
         }
         .card-container {
             display: flex;
             justify-content: center;
-            flex-wrap: wrap;
             margin-top: 30px;
+            flex-wrap: wrap;
         }
         .card {
             background: white;
-            padding: 20px;
+            padding: 25px;
             margin: 15px;
-            border-radius: 8px;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-            width: 250px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 240px;
             text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-        .card h3 {
-            margin-bottom: 15px;
-            color: #333;
+        .card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
         }
         .btn {
-            display: inline-block;
-            padding: 10px 15px;
             background: #007BFF;
             color: white;
             text-decoration: none;
+            padding: 12px 20px;
             border-radius: 5px;
+            font-size: 16px;
+            transition: background 0.3s ease;
         }
         .btn:hover {
             background: #0056b3;
         }
-        .logout {
-            background-color: red;
-        }
-        .logout:hover {
-            background-color: darkred;
-        }
     </style>
+
 </head>
 <body>
 <%
@@ -89,11 +81,11 @@
 <div class="navbar">
     <h2>Cab Service Dashboard</h2>
     <div>
-        <a href="#">Home</a>
-        <a href="#">About Us</a>
-        <a href="#">Book a Ride</a>
-        <a href="#">Ride History</a>
-        <a href="profile.jsp">Profile</a>
+        <a href="welcome.jsp">Home</a>
+        <a href="about.jsp">About Us</a>
+<%--        <a href="#">Book a Ride</a>--%>
+<%--        <a href="#">Ride History</a>--%>
+<%--        <a href="profile.jsp">Profile</a>--%>
         <a class="btn logout" href="<%= request.getContextPath() %>/customer/login.jsp">Logout</a>
     </div>
 </div>
